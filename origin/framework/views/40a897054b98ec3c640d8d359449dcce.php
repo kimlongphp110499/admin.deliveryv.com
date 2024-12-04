@@ -1,0 +1,3 @@
+<svg class="w-5 h-5 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+</svg><?php /**PATH /home/deliveryv/public_html/admin.deliveryv.com/storage/framework/views/2049846d143b52cdb1e9c94616a768af.blade.php ENDPATH**/ ?>

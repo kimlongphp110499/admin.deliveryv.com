@@ -1,0 +1,104 @@
+<?php $__env->startSection('title', __('Become A Partner')); ?>
+<div>
+    <?php if(setting('partnersCanRegister', true)): ?>
+        <?php
+            $img = getValidValue(setting('registerImage'), asset('images/register.jpg'));
+            if (!empty($img)) {
+                $bg = "bg-[url('" . $img . "')]";
+                //set image as background repeat
+                $bg .= ' bg-center bg-cover bg-no-repeat';
+            } else {
+                $bg = 'bg-gray-50';
+            }
+            $isUrl = filter_var($img, FILTER_VALIDATE_URL);
+        ?>
+        <div class="flex items-center min-h-screen md:flex"
+            <?php if($isUrl): ?> 
+            
+            style="background-image: url('<?php echo e($img); ?>' ) !important;"
+            
+        <?php else: ?>
+            class="<?php echo e($bg); ?>"
+             <?php endif; ?>>
+            <div class="py-4 mx-auto my-10 overflow-y-auto">
+                <div 
+                    class="w-11/12 h-full max-w-xl mx-auto my-12 overflow-hidden bg-white rounded-lg shadow-lg shadow-slate-400 md:my-auto md:max-w-2xl">
+                    <div class="flex flex-col overflow-y-auto md:flex-row">
+                        <div class="flex items-center justify-center w-full p-6 sm:p-12 ">
+                            <div class="w-full">
+                                <div class="flex items-center justify-between">
+                                    <h1 class="w-full mb-4 text-3xl font-bold text-gray-700 uppercase">
+                                        <?php echo e(__('Become a partner')); ?>
+
+                                    </h1>
+                                    <?php
+if (! isset($_instance)) {
+    $html = \Livewire\Livewire::mount('select.language-selector', [])->html();
+} elseif ($_instance->childHasBeenRendered('l3540482057-0')) {
+    $componentId = $_instance->getRenderedChildComponentId('l3540482057-0');
+    $componentTag = $_instance->getRenderedChildComponentTagName('l3540482057-0');
+    $html = \Livewire\Livewire::dummyMount($componentId, $componentTag);
+    $_instance->preserveRenderedChild('l3540482057-0');
+} else {
+    $response = \Livewire\Livewire::mount('select.language-selector', []);
+    $html = $response->html();
+    $_instance->logRenderedChild('l3540482057-0', $response->id(), \Livewire\Livewire::getRootElementTagName($html));
+}
+echo $html;
+?>
+                                </div>
+                                
+                                <div id="tab_wrapper">
+                                    <?php echo $__env->make('livewire.auth.register.partials.vendor', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                                    <p class="my-4 text-center">
+                                        <?php echo e(__('Already have an account?')); ?> <a href="<?php echo e(route('login')); ?>"
+                                            class="ml-2 font-bold text-primary-500 text-md"><?php echo e(__('Login')); ?></a>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php else: ?>
+        
+        <div class="w-full p-12 mx-auto my-12 rounded-sm shadow md:w-5/12 lg:w-4/12 ">
+            <p class="mb-2 text-2xl font-semibold"><?php echo e(__('Registration Page Not available')); ?></p>
+            <p class="text-sm">
+                <?php echo e(__('Partner account registration is currently unavailable. Please stay tune/contact support regarding further instruction about registering for a partners account. Thank you')); ?>
+
+            </p>
+            <p class='mt-4 text-center'>
+                <a href="<?php echo e(route('contact')); ?>" class="underline text-primary-600">
+                    <?php echo e(__('Contact Us')); ?>
+
+                </a>
+            </p>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (isset($component)) { $__componentOriginal84bc13f46ede078ae58666238de3da00 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal84bc13f46ede078ae58666238de3da00 = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.loading','data' => []] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? (array) $attributes->getIterator() : [])); ?>
+<?php $component->withName('loading'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag && $constructor = (new ReflectionClass(Illuminate\View\AnonymousComponent::class))->getConstructor()): ?>
+<?php $attributes = $attributes->except(collect($constructor->getParameters())->map->getName()->all()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal84bc13f46ede078ae58666238de3da00)): ?>
+<?php $attributes = $__attributesOriginal84bc13f46ede078ae58666238de3da00; ?>
+<?php unset($__attributesOriginal84bc13f46ede078ae58666238de3da00); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal84bc13f46ede078ae58666238de3da00)): ?>
+<?php $component = $__componentOriginal84bc13f46ede078ae58666238de3da00; ?>
+<?php unset($__componentOriginal84bc13f46ede078ae58666238de3da00); ?>
+<?php endif; ?>
+    <?php echo $__env->make('layouts.partials.phoneselector', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+</div>
+<?php /**PATH /home/deliveryv/public_html/admin.deliveryv.com/resources/views/livewire/auth/register/register.blade.php ENDPATH**/ ?>

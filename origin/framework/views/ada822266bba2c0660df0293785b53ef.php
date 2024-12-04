@@ -1,0 +1,2 @@
+<p class="break-all"><?php echo e($value ??  $model[$column->attribute] ?? ''); ?></p>
+<?php /**PATH /home/deliveryv/public_html/admin.deliveryv.com/resources/views/components/table/custom.blade.php ENDPATH**/ ?>
