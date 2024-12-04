@@ -34,7 +34,7 @@ class ProductController extends Controller
                 // ->orWhere('description', 'like', '%' . $request->keyword . '%')
                 // ->orWhere('barcode', "like", "%" . $request->keyword);
             })->latest()
-                ->paginate($this->perPage);
+                ->paginate($this->productsPerPage);
         }
         return Product::active()
             ->currentlyOpen()
@@ -96,26 +96,16 @@ class ProductController extends Controller
             ->when($request->type == "new", function ($query) {
                 return $query->orderBy('created_at', 'DESC');
             })
+            ->when($request->type == "featured", function ($query) {
+                return $query->where('featured', 1);
+            })
             // NEW ONES END HERE
-            ->when($request->latitude, function ($query) use ($request) {
-
-                if (!fetchDataByLocation()) {
-                    return $query;
-                }
-
-                $latitude = $request->latitude;
-                $longitude = $request->longitude;
-                $deliveryZonesIds = $this->getDeliveryZonesByLocation($latitude, $longitude);
-                //where has vendors that has delivery zones
-                return $query->whereHas("vendor", function ($query) use ($deliveryZonesIds) {
-                    $query->whereHas('delivery_zones', function ($query) use ($deliveryZonesIds) {
-                        $query->whereIn('delivery_zone_id', $deliveryZonesIds);
-                    });
-                });
+            ->when(fetchDataByLocation() && $request->latitude, function ($query) use ($request) {
+                return $query->byDeliveryZone($request->latitude, $request->longitude);
             })
             //order by in_order
             ->orderBy('in_order', 'ASC')
-            ->paginate($this->perPage);
+            ->paginate($this->productsPerPage);
     }
 
     public function show(Request $request, $id)

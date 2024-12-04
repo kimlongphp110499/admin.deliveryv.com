@@ -16,6 +16,7 @@
                 'csrfToken' => csrf_token(),
             ]); ?>
         </script>
+        @include('layouts.partials.google_tags')
     </head>
     <body>
         <div class="master">

@@ -57,9 +57,11 @@ use App\Http\Controllers\API\MyVendorController;
 use App\Http\Controllers\API\VendorReportController;
 use App\Http\Controllers\API\DriverReportController;
 use App\Http\Controllers\API\DocumentRequestController;
+use App\Http\Controllers\API\FavouriteVendorController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\ReportController; 
+use App\Http\Controllers\API\ReportController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -90,14 +92,27 @@ Route::get('/cron/job', function (Request $request) {
     ]);
 })->name('cron.job');
 
+Route::get('/livewire/publish', function (Request $request) {
+    $commandArray = ["php", "artisan", "livewire:publish", "--assets"];
+    $commandRunner = new \Symfony\Component\Process\Process($commandArray);
+    $commandRunner->setWorkingDirectory(base_path());
+    $commandRunner->run();
+
+    if (!$commandRunner->isSuccessful()) {
+        throw new \Symfony\Component\Process\Exception\ProcessFailedException($commandRunner);
+    }
+
+    return response()->json([
+        "message" => "publish runed",
+    ]);
+});
+
+
 //App settings
 Route::get('/app/settings', [AppSettingsController::class, 'index']);
 Route::get('/app/onboarding', [OnboardingController::class, 'index']);
 Route::get('/app/faqs', [FaqController::class, 'index']);
 Route::get('/cancellation/reasons', [CancellationReasonController::class, 'index']);
-
-// Admin Report Gov
-Route::get('/baocao/gov', [ReportController::class, 'index']); 
 
 // Auth
 Route::group(['middleware' => ['throttle:otp']], function () {
@@ -156,6 +171,7 @@ Route::get('geocoder/place/details', [GeocoderController::class, 'reverseDetails
 Route::get('/download/digital/files/{id}', [SignedMediaController::class, 'download'])->name('digital.download');
 //Server run external apis
 Route::apiResource('external/redirect', ExternalRedirectController::class)->only('index');
+Route::get('external/web/redirect', [ExternalRedirectController::class, 'webRedirect']);
 
 
 
@@ -163,6 +179,7 @@ Route::apiResource('external/redirect', ExternalRedirectController::class)->only
 Route::group(['middleware' => ['auth:sanctum', "user.active.check"]], function () {
 
     Route::apiResource('favourites', FavouriteController::class);
+    Route::apiResource('favourite/vendors', FavouriteVendorController::class);
     Route::post('device/token/sync', [UserFirebaseController::class, 'syncTokens']);
     Route::get('logout', [AuthController::class, 'logout']);
     Route::get('my/profile', [UserController::class, 'myProfile']);
@@ -205,6 +222,7 @@ Route::group(['middleware' => ['auth:sanctum', "user.active.check"]], function (
     Route::get('vehicle/types/pricing', [VehicleTypeController::class, 'calculateFee']);
     Route::post('taxi/book/order', [TaxiOrderController::class, 'book']);
     Route::get('taxi/current/order', [TaxiOrderController::class, 'current']);
+    Route::get('taxi/rateable/order', [TaxiOrderController::class, 'currentRateable']);
     Route::get('taxi/order/cancel/{id}', [TaxiOrderController::class, 'cancelOrder']);
     Route::get('taxi/driver/info/{id}', [TaxiOrderController::class, 'driverInfo']);
     Route::get('taxi/location/available', [TaxiOrderController::class, 'location_available']);
@@ -264,3 +282,6 @@ Route::group(['middleware' => ['auth:sanctum', "user.active.check"]], function (
         Route::get('/driver/earnings/report', [DriverReportController::class, 'earnings']);
     });
 });
+
+//for bo cong thuong
+Route::post('/baocao/gov', [ReportController::class, 'index']);

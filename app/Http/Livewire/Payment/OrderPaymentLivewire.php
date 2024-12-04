@@ -56,7 +56,7 @@ class OrderPaymentLivewire extends BaseLivewireComponent
         if (empty($this->selectedModel)) {
             return view('livewire.payment.invalid')->layout('layouts.auth');
         } else if (!in_array($this->paymentStatus, ['pending', 'review'])) {
-            // return view('livewire.payment.processed')->layout('layouts.auth');
+            return view('livewire.payment.processed')->layout('layouts.auth');
             //payment already processed
             $link = route('payment.processed', ["code" => $this->selectedModel->code, "type" => "order"]);
             return redirect()->away($link);

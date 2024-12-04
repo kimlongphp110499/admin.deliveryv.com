@@ -8,6 +8,7 @@
     <title>@yield('title', '') - {{ setting('websiteName', env('APP_NAME')) }}</title>
     @include('layouts.partials.styles')
     @yield('styles')
+    @include('layouts.partials.google_tags')
 </head>
 
 <body>

@@ -48,10 +48,8 @@ class VendorLivewire extends VendorTimingLivewire
     public $has_sub_categories;
     public $use_subscription = false;
     public $vendor_type_id;
-    public $vendorTypes;
     public $isPackageVendor = false;
     public $isServiceVendor = false;
-    public $deliveryZones;
     public $has_drivers = false;
     public $prepare_time;
     public $prepare_time_unit = "minutes";
@@ -117,13 +115,16 @@ class VendorLivewire extends VendorTimingLivewire
 
     public function render()
     {
-        if (empty($this->vendorTypes)) {
-            $this->vendorTypes = VendorType::active()->assignable()->get();
-        }
-        if (empty($this->deliveryZones)) {
-            $this->deliveryZones = DeliveryZone::active()->get();
-        }
         return view('livewire.vendors');
+    }
+
+    public function getDeliveryZonesProperty()
+    {
+        return DeliveryZone::active()->get();
+    }
+    public function getVendorTypesProperty()
+    {
+        return VendorType::active()->assignable()->get();
     }
 
 

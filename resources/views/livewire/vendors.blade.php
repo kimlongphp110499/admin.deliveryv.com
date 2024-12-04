@@ -21,7 +21,7 @@
             </div>
 
             {{-- vendor type --}}
-            <x-select title="{{ __('Vendor Type') }}" :options='$vendorTypes ?? []' name="vendor_type_id" :defer="false" />
+            <x-select title="{{ __('Vendor Type') }}" :options='$this->vendorTypes ?? []' name="vendor_type_id" :defer="false" />
             {{-- <x-input title="{{ __('Description') }}" name="description" /> --}}
             <x-input.summernote name="description" title="{{ __('Description') }}" id="newContent" />
 
@@ -42,7 +42,7 @@
                 </div>
                 {{-- delivery zones --}}
                 <div class="{{ !$isPackageVendor ? 'block' : 'hidden' }} grid items-center grid-cols-1 gap-4">
-                    <x-select2 title="{{ __('Delivery Zone') }}" :options="$deliveryZones ?? []" name="deliveryZonesIDs"
+                    <x-select2 title="{{ __('Delivery Zone') }}" :options="$this->deliveryZones ?? []" name="deliveryZonesIDs"
                         id="deliveryZonesSelect2" :multiple="true" width="100" :ignore="true" />
                 </div>
             </div>
@@ -81,29 +81,27 @@
                 <div class="grid grid-cols-2 gap-4">
                     <x-input title="{{ __('Delivery Range(KM)') }}" name="delivery_range" />
                     <x-checkbox title="{{ __('Charge per KM') }}" name="charge_per_km"
-                        description="{{ __('Delivery fee will be per KM') }}" :defer="false" />
+                        description="{{ __('Delivery fee will be per KM') }}" />
                 </div>
                 <div class="{{ !$isServiceVendor ? 'block' : 'hidden' }} grid items-center grid-cols-2 gap-4">
                     <x-checkbox title="{{ __('Pickup') }}" name="pickup"
-                        description="{{ __('Allows pickup orders') }}" :defer="false" />
+                        description="{{ __('Allows pickup orders') }}" />
                     <x-checkbox title="{{ __('Delivery') }}" name="delivery"
-                        description="{{ __('Allows delivery orders') }}" :defer="false" />
+                        description="{{ __('Allows delivery orders') }}" />
                 </div>
 
                 <hr class="mt-5" />
             </div>
             <div class="grid items-center grid-cols-2 gap-4">
                 <x-checkbox title="{{ __('Schedule Order') }}" name="allow_schedule_order"
-                    description="{{ __('Allows customer to schedule orders') }}" :defer="false" />
+                    description="{{ __('Allows customer to schedule orders') }}" />
                 @if (!$isServiceVendor)
                     <x-checkbox title="{{ __('Order Auto Assignment') }}" name="auto_assignment"
-                        description="{{ __('System will automatic assign order to delivery boy') }}"
-                        :defer="false" />
+                        description="{{ __('System will automatic assign order to delivery boy') }}" />
                 @endif
 
                 <x-checkbox title="{{ __('Auto Accept Order') }}" name="auto_accept"
-                    description="{{ __('System will automatic change pending order to preparing') }}"
-                    :defer="false" />
+                    description="{{ __('System will automatic change pending order to preparing') }}" />
             </div>
             <hr class="mt-4" />
             <div class="grid grid-cols-2 gap-4">
@@ -134,8 +132,8 @@
             </div>
             <hr class="mt-4" />
             <div class="grid grid-cols-2 gap-4">
-                <x-checkbox title="{{ __('Has Own Drivers') }}" name="has_drivers" :defer="false" />
-                <x-checkbox title="{{ __('Use Subscription') }}" name="use_subscription" :defer="false" />
+                <x-checkbox title="{{ __('Has Own Drivers') }}" name="has_drivers" />
+                <x-checkbox title="{{ __('Use Subscription') }}" name="use_subscription" />
             </div>
             <div class="grid grid-cols-2 gap-4">
                 <x-input title="{{ __('System Commission(%)') }}" name="commission" {{--  disable="{{ $use_subscription ? true:false }}" --}} />
@@ -164,9 +162,11 @@
             @endcan
 
             @hasanyrole('city-admin|admin')
-                <x-checkbox title="{{ __('Active') }}" name="isActive" :defer="false" />
-                <x-checkbox title="{{ __('Featured') }}" name="featured" :defer="false" />
+                <x-checkbox title="{{ __('Active') }}" name="isActive" />
+                <x-checkbox title="{{ __('Featured') }}" name="featured" />
             @endhasanyrole
+
+            <x-form-errors />
 
         </x-modal-lg>
     </div>
@@ -197,7 +197,7 @@
 
             @hasanyrole('city-admin|admin')
                 {{-- vendor type --}}
-                <x-select title="{{ __('Vendor Type') }}" :options='$vendorTypes ?? []' name="vendor_type_id" :defer="false" />
+                <x-select title="{{ __('Vendor Type') }}" :options='$this->vendorTypes ?? []' name="vendor_type_id" :defer="false" />
             @else
                 <x-label title="{{ __('Vendor Type') }}">
                     <p class="font-medium text-base">{{ $selectedModel->vendor_type->name ?? '' }} </p>
@@ -237,7 +237,7 @@
                 @endhasanyrole
                 {{-- delivery zones --}}
                 <div class="{{ !$isPackageVendor ? 'block' : 'hidden' }} grid items-center grid-cols-1 gap-4">
-                    <x-select2 title="{{ __('Delivery Zone') }}" :options="$deliveryZones ?? []" name="deliveryZonesIDs"
+                    <x-select2 title="{{ __('Delivery Zone') }}" :options="$this->deliveryZones ?? []" name="deliveryZonesIDs"
                         id="editDeliveryZonesSelect2" :multiple="true" width="100" :ignore="true" />
                 </div>
             </div>
@@ -275,30 +275,28 @@
                     <x-input title="{{ __('Delivery Range(KM)') }}" name="delivery_range" />
                     @showDeliveryFeeSetting
                     <x-checkbox title="{{ __('Charge per KM') }}" name="charge_per_km"
-                        description="{{ __('Delivery fee will be per KM') }}" :defer="false" />
+                        description="{{ __('Delivery fee will be per KM') }}" />
                     @endshowDeliveryFeeSetting
                 </div>
                 <div class="{{ !$isServiceVendor ? 'block' : 'hidden' }} grid items-center grid-cols-2 gap-4">
                     <x-checkbox title="{{ __('Pickup') }}" name="pickup"
-                        description="{{ __('Allows pickup orders') }}" :defer="false" />
+                        description="{{ __('Allows pickup orders') }}" />
                     <x-checkbox title="{{ __('Delivery') }}" name="delivery"
-                        description="{{ __('Allows delivery orders') }}" :defer="false" />
+                        description="{{ __('Allows delivery orders') }}" />
                 </div>
 
                 <hr class="mt-5" />
             </div>
             <div class="grid items-center grid-cols-2 gap-4">
                 <x-checkbox title="{{ __('Schedule Order') }}" name="allow_schedule_order"
-                    description="{{ __('Allows customer to schedule orders') }}" :defer="false" />
+                    description="{{ __('Allows customer to schedule orders') }}" />
                 @if (!$isServiceVendor)
                     <x-checkbox title="{{ __('Order Auto Assignment') }}" name="auto_assignment"
-                        description="{{ __('System will automatic assign order to delivery boy') }}"
-                        :defer="false" />
+                        description="{{ __('System will automatic assign order to delivery boy') }}" />
                 @endif
 
                 <x-checkbox title="{{ __('Auto Accept Order') }}" name="auto_accept"
-                    description="{{ __('System will automatic change pending order to preparing') }}"
-                    :defer="false" />
+                    description="{{ __('System will automatic change pending order to preparing') }}" />
             </div>
             <hr class="mt-4" />
             <div class="grid grid-cols-2 gap-4">
@@ -331,8 +329,8 @@
             @role('admin')
                 <hr class="mt-4" />
                 <div class="grid grid-cols-2 gap-4">
-                    <x-checkbox title="{{ __('Has Own Drivers') }}" name="has_drivers" :defer="false" />
-                    <x-checkbox title="{{ __('Use Subscription') }}" name="use_subscription" :defer="false" />
+                    <x-checkbox title="{{ __('Has Own Drivers') }}" name="has_drivers" />
+                    <x-checkbox title="{{ __('Use Subscription') }}" name="use_subscription" />
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <x-input title="{{ __('System Commission(%)') }}" name="commission" {{--  disable="{{ $use_subscription ? true:false }}" --}} />
@@ -366,9 +364,12 @@
 
             <hr />
             @hasanyrole('city-admin|admin')
-                <x-checkbox title="{{ __('Active') }}" name="isActive" :defer="false" />
-                <x-checkbox title="{{ __('Featured') }}" name="featured" :defer="false" />
+                <x-checkbox title="{{ __('Active') }}" name="isActive" />
+                <x-checkbox title="{{ __('Featured') }}" name="featured" />
             @endhasanyrole
+
+            <x-form-errors />
+
         </x-modal-lg>
     </div>
 

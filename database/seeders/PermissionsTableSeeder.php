@@ -130,7 +130,7 @@ view-tags
             "order-product-visibilities",
         ];
         //managers roles only
-        $managerRolePermissions = ["manager-fleets", "my-subscription", 'my-earning','view-report-on-app'];
+        $managerRolePermissions = ["manager-fleets", "my-subscription", 'my-earning'];
         //admin & manager permissions
         $adminManagerRolePermissions = [
             "view-report",
@@ -139,6 +139,7 @@ view-tags
             "view-subscription",
             "view-payment-section",
             "view-payment-accounts",
+            "view_report_on_app",
         ];
         //admin & city-admin permissions
         $cityAdminRolePermissions = [

@@ -54,7 +54,7 @@ class RegularOrderService
         // it will throw an exception if the order is not payable by wallet
         $this->isPayableByWallet();
         //allow old unencrypted order
-        if (allowOldUnEncryptedOrder()) {
+        if (allowOldUnEncryptedOrder() && !isset($request->token)) {
             $order = $this->oldSingleOrder($order, $request);
         } else {
             //verify order data
@@ -74,7 +74,7 @@ class RegularOrderService
             $order->delivery_fee = $orderData['delivery_fee'];
             $order->tip = $orderData['tip'] ?? 0.00;
             $order->tax = $orderData['tax'];
-            $order->tax_rate = Vendor::find($request->vendor_id)->tax ?? 0.0;
+            $order->tax_rate = $orderData['tax_rate'] ?? Vendor::find($request->vendor_id)->tax ?? 0.0;
             $order->total = $orderData['total'];
             $order->pickup_date = $request->pickup_date;
             $order->pickup_time = $request->pickup_time;
@@ -232,7 +232,7 @@ class RegularOrderService
                 $order->delivery_fee = $orderData["delivery_fee"];
                 $order->tip = $orderData["tip"] ?? 0.00;
                 $order->tax = $orderData["tax"];
-                $order->tax_rate = $request->tax_rate ?? Vendor::find($order->vendor_id)->tax ?? 0.00;
+                $order->tax_rate = $orderData['tax_rate'] ?? $request->tax_rate ?? Vendor::find($order->vendor_id)->tax ?? 0.00;
                 $order->total = $orderData["total"];
                 $order->pickup_date = $request->pickup_date;
                 $order->pickup_time = $request->pickup_time;
@@ -354,7 +354,7 @@ class RegularOrderService
         $order->delivery_fee = $request->delivery_fee ?? 0.00;
         $order->tip = $request->tip ?? 0.00;
         $order->tax = $request->tax ?? 0.00;
-        $order->tax_rate = Vendor::find($request->vendor_id)->tax ?? 0.0;
+        $order->tax_rate = $request->tax_rate ??  Vendor::find($request->vendor_id)->tax ?? 0.0;
         $order->total = $request->total ?? 0.00;
         $order->pickup_date = $request->pickup_date;
         $order->pickup_time = $request->pickup_time;

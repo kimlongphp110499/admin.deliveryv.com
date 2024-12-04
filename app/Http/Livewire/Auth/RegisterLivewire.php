@@ -114,7 +114,7 @@ class RegisterLivewire extends BaseLivewireComponent
             $user->is_active = false;
             $user->save();
             //assign role
-            $user->assignRole('manager');
+            $user->syncRoles('manager');
 
             //create vendor
             $vendor = new Vendor();

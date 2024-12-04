@@ -14,7 +14,8 @@
                 <x-details.item title="{{ __('Vendor') }}" text="{{ \Auth::user()->vendor->name ?? '' }}" />
             @else
                 <div>
-                    <x-select :options="$vendors ?? []" name="vendor_id" title="{{ __('Vendor') }}" :noPreSelect="true" />
+                    <x-select :options="$vendors ?? []" name="vendor_id" title="{{ __('Vendor') }}" :noPreSelect="true"
+                        :defer="false" />
                 </div>
             @endrole
             <x-checkbox title="{{ __('Active') }}" name="isActive" :defer="false" />

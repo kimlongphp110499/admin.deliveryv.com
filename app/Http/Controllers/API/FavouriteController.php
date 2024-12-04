@@ -10,17 +10,22 @@ use Illuminate\Support\Facades\Auth;
 class FavouriteController extends Controller
 {
 
-    public function index(Request $request){
-        $favourites = Favourite::with('product.options')->where('user_id', "=", Auth::id())->get();
+    public function index(Request $request)
+    {
+        $favourites = Favourite::with('product.options')
+            ->where('user_id', Auth::id())
+            ->whereNotNull('product_id')
+            ->get();
         return $favourites;
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
 
-        try{
+        try {
 
             $model = Favourite::where('user_id', Auth::id())->where('product_id', $request->product_id)->first();
-            if( !empty($model) ){
+            if (!empty($model)) {
                 return response()->json([
                     "message" => __("Product already Favourite")
                 ], 400);
@@ -34,31 +39,30 @@ class FavouriteController extends Controller
             return response()->json([
                 "message" => __("Favourite added successfully")
             ], 200);
-
-        }catch(\Exception $ex){
+        } catch (\Exception $ex) {
 
             return response()->json([
                 "message" => __("No Favourite Found")
             ], 400);
-
         }
-
     }
 
-    public function destroy(Request $request, $id){
+    public function destroy(Request $request, $id)
+    {
 
-        try{
+        try {
 
-            Favourite::where('user_id', "=", Auth::id())->where('product_id', "=", $id)->firstorfail()->delete();
+            Favourite::where('user_id', Auth::id())
+                ->where('product_id',  $id)
+                ->firstorfail()
+                ->delete();
             return response()->json([
                 "message" => __("Favourite deleted successfully")
             ], 200);
-
-        }catch(\Exception $ex){
+        } catch (\Exception $ex) {
             return response()->json([
                 "message" => __("No Favourite Found")
             ], 400);
         }
     }
-
 }

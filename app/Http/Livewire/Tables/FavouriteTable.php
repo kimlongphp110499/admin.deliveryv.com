@@ -3,29 +3,25 @@
 namespace App\Http\Livewire\Tables;
 
 use App\Models\Favourite;
-use App\Models\Product;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Kdion4891\LaravelLivewireTables\Column;
+use Rappasoft\LaravelLivewireTables\Views\Column;
 
-class FavouriteTable extends BaseTableComponent
+class FavouriteTable extends BaseDataTableComponent
 {
 
     public $model = Favourite::class;
 
     public function query()
     {
-        return Favourite::with('user','product');
+        return Favourite::with('user', 'product')->whereNotNull('product_id');
     }
 
-    public function columns()
+    public function columns(): array
     {
         return [
-            Column::make(__('ID'),"id")->searchable()->sortable(),
-            Column::make(__('Product'),'product.name')->searchable()->sortable(),
+            // Column::make(__('ID'), "id")->searchable()->sortable(),
+            $this->indexColumn(),
+            Column::make(__('Product'), 'product.name')->searchable()->sortable(),
             Column::make(__('User'), 'user.name')->searchable()->sortable(),
         ];
     }
-
-
 }

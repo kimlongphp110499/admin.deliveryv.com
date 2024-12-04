@@ -38,6 +38,11 @@ class PartnerController extends Controller
                 'vendor_name' => 'required',
                 'vendor_type_id' => 'required|exists:vendor_types,id',
                 'address' => 'required',
+                //file validation
+                "logo" => "nullable|sometimes|image|max:" . setting("filelimit.vendor_logo", 2048) . "",
+                "feature_image" => "nullable|sometimes|image|max:" . setting("filelimit.vendor_feature", 2048) . "",
+                'documents' => 'nullable|array',
+                'documents.*' => "required|image|mimes:jpeg,png,jpg,gif,pdf,doc,docx,xlsx|max:" . setting('filelimit.document_limit', 300) . "",
             ]
         );
 
@@ -72,7 +77,7 @@ class PartnerController extends Controller
             $user->is_active = false;
             $user->save();
             //assign role
-            $user->assignRole('manager');
+            $user->syncRoles('manager');
 
             //create vendor
             $vendor = new Vendor();
@@ -86,8 +91,20 @@ class PartnerController extends Controller
             $vendor->longitude = $request->longitude;
             $vendor->save();
 
+            if ($request->hasFile("logo")) {
+                $logo = $request->logo;
+                $vendor->addMedia($logo->getRealPath())
+                    ->usingFileName(genFileName($logo))
+                    ->toMediaCollection("logo");
+            }
+            if ($request->hasFile("feature_image")) {
+                $featureImage = $request->feature_image;
+                $vendor->addMedia($featureImage->getRealPath())
+                    ->usingFileName(genFileName($featureImage))
+                    ->toMediaCollection("feature_image");
+            }
+            //
             if ($request->hasFile("documents")) {
-
                 foreach ($request->documents as $vendorDocument) {
                     $vendor->addMedia($vendorDocument->getRealPath())->toMediaCollection("documents");
                 }
@@ -157,7 +174,7 @@ class PartnerController extends Controller
             $user->is_active = false;
             $user->save();
             //assign role
-            $user->assignRole('driver');
+            $user->syncRoles('driver');
 
             //taxi section
             if ($request->driver_type == "taxi") {

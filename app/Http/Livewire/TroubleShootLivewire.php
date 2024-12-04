@@ -8,6 +8,7 @@ use App\Models\UserToken;
 use App\Services\ModelTranslationService;
 use App\Services\TranslationFixService;
 use App\Services\FirestoreRestService;
+use App\Services\GeoBoundaryService;
 use App\Traits\FirebaseAuthTrait;
 use GeoSot\EnvEditor\Facades\EnvEditor;
 //
@@ -459,6 +460,49 @@ class TroubleShootLivewire extends BaseLivewireComponent
         } catch (\Exception $ex) {
             logger("error", [$ex]);
             $this->showErrorAlert($ex->getMessage() ?? __("Firestore Web Tokens clearing") . " " . __("Failed"));
+        }
+    }
+
+
+
+
+    //
+    public function fixCountiresBoundaries()
+    {
+
+        try {
+            $this->isDemo();
+            GeoBoundaryService::syncCountriesBoundaries();
+            $this->showSuccessAlert(__("Countries Boundaries Synced") . " " . __("Successfully"));
+        } catch (\Exception $ex) {
+            logger("error", [$ex]);
+            $this->showErrorAlert($ex->getMessage() ?? __("Failed"), $time = 30000);
+        }
+    }
+
+    public function fixStatesBoundaries()
+    {
+
+        try {
+            $this->isDemo();
+            GeoBoundaryService::syncStatesBoundaries();
+            $this->showSuccessAlert(__("States Boundaries Synced") . " " . __("Successfully"));
+        } catch (\Exception $ex) {
+            logger("error", [$ex]);
+            $this->showErrorAlert($ex->getMessage() ?? __("Failed"), $time = 30000);
+        }
+    }
+
+    public function fixCitiesBoundaries()
+    {
+
+        try {
+            $this->isDemo();
+            GeoBoundaryService::syncCitiesBoundaries();
+            $this->showSuccessAlert(__("Cities Boundaries Synced") . " " . __("Successfully"));
+        } catch (\Exception $ex) {
+            logger("error", [$ex]);
+            $this->showErrorAlert($ex->getMessage() ?? __("Failed"), $time = 30000);
         }
     }
 }

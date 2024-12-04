@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Report;
 use App\Http\Livewire\BaseLivewireComponent;
 use App\Models\Commission;
 use App\Models\Order;
+use Illuminate\Support\Facades\Auth;
 
 class SummaryReportLivewire extends BaseLivewireComponent
 {
@@ -27,6 +28,14 @@ class SummaryReportLivewire extends BaseLivewireComponent
     {
         $this->startDate = now()->subDays(14)->format('Y-m-d');
         $this->endDate = now()->format('Y-m-d');
+
+        //for bct
+        //code_yourself
+        if (Auth::user()->is_ct_account) {
+            $this->startDate = '';
+            $this->endDate = '';
+        }
+        //code_yourself
         $this->loadData();
     }
 

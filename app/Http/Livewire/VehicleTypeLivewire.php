@@ -26,6 +26,7 @@ class VehicleTypeLivewire extends BaseLivewireComponent
         "time_fare" => 'required|numeric',
         "min_fare" => 'required|numeric',
         "photo" => "required|image|max:1024",
+        "secondPhoto" => "nullable|image|max:300",
     ];
 
     public function render()
@@ -37,7 +38,7 @@ class VehicleTypeLivewire extends BaseLivewireComponent
     {
         //validate
         $rules = $this->rules;
-        $rules["photo"] = "required|image|max:".setting("filelimit.vendor_type",200)."";
+        $rules["photo"] = "required|image|max:" . setting("filelimit.vendor_type", 200) . "";
         $this->validate($rules);
 
         try {
@@ -53,10 +54,14 @@ class VehicleTypeLivewire extends BaseLivewireComponent
             $vehicleType->save();
 
             if ($this->photo) {
-                
                 $vehicleType->clearMediaCollection();
                 $vehicleType->addMedia($this->photo->getRealPath())->toMediaCollection();
                 $this->photo = null;
+            }
+            if ($this->secondPhoto) {
+                $vehicleType->clearMediaCollection('icon');
+                $vehicleType->addMedia($this->secondPhoto->getRealPath())->toMediaCollection('icon');
+                $this->secondPhoto = null;
             }
 
             DB::commit();
@@ -95,7 +100,8 @@ class VehicleTypeLivewire extends BaseLivewireComponent
             "distance_fare" => 'required|numeric',
             "time_fare" => 'required|numeric',
             "min_fare" => 'required|numeric',
-            "photo" => "nullable|sometimes|image|max:".setting("filelimit.vendor_type",200)."",
+            "photo" => "nullable|sometimes|image|max:" . setting("filelimit.vendor_type", 200) . "",
+            "secondPhoto" => "nullable|image|max:300",
         ]);
 
         try {
@@ -110,10 +116,16 @@ class VehicleTypeLivewire extends BaseLivewireComponent
             $this->selectedModel->save();
 
             if ($this->photo) {
-                
+
                 $this->selectedModel->clearMediaCollection();
                 $this->selectedModel->addMedia($this->photo->getRealPath())->toMediaCollection();
                 $this->photo = null;
+            }
+
+            if ($this->secondPhoto) {
+                $this->selectedModel->clearMediaCollection('icon');
+                $this->selectedModel->addMedia($this->secondPhoto->getRealPath())->toMediaCollection('icon');
+                $this->secondPhoto = null;
             }
 
             DB::commit();
@@ -127,5 +139,4 @@ class VehicleTypeLivewire extends BaseLivewireComponent
             $this->showErrorAlert($error->getMessage() ?? __("Vehicle Type") . " " . __('update failed!'));
         }
     }
-
 }

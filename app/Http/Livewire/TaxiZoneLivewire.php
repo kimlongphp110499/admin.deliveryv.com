@@ -49,6 +49,15 @@ class TaxiZoneLivewire extends BaseLivewireComponent
         }
     }
 
+    public function showCreateModal()
+    {
+        try {
+            $this->isDemo();
+            parent::showCreateModal();
+        } catch (\Exception $error) {
+            $this->showErrorAlert($error->getMessage() ?? "Failed");
+        }
+    }
 
     //
     function save()
@@ -64,7 +73,7 @@ class TaxiZoneLivewire extends BaseLivewireComponent
                 return;
             }
 
-            // 
+            //
             $centerCoordinate = $this->getCenter($this->coordinateCollection);
             $centerCoordinateDistance = $this->getLinearDistance(
                 "" . $centerCoordinate[0] . "," . $centerCoordinate[1] . "",
@@ -133,7 +142,7 @@ class TaxiZoneLivewire extends BaseLivewireComponent
 
         try {
 
-            // 
+            //
             $centerCoordinate = $this->getCenter($this->coordinateCollection);
             $centerCoordinateDistance = $this->getLinearDistance(
                 "" . $centerCoordinate[0] . "," . $centerCoordinate[1] . "",

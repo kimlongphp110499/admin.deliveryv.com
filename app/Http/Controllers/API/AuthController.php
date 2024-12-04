@@ -327,15 +327,6 @@ class AuthController extends Controller
     public function profileUpdate(Request $request)
     {
 
-        //if enableProfileUpdate is false, then return error
-        $enableProfileUpdate = (bool) setting('enableProfileUpdate', 1);
-        if (!$enableProfileUpdate) {
-            return response()->json([
-                "message" => __("Profile update is disabled"),
-            ], 400);
-        }
-
-
         //
         $validator = Validator::make(
             $request->all(),

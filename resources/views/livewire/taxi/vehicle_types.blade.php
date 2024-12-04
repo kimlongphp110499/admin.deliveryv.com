@@ -1,4 +1,4 @@
-@section('title', __('Vehicle Types') )
+@section('title', __('Vehicle Types'))
 <div>
 
     <x-baseview title="{{ __('Vehicle Types') }}" :showNew="true">
@@ -14,10 +14,11 @@
             <x-input title="{{ __('Distance Fare') }}(/km)" name="distance_fare" />
             <x-input title="{{ __('Fare Per Minutes') }}" name="time_fare" />
             <x-input title="{{ __('Minimum Fare') }}" name="min_fare" />
-            <x-media-upload title="{{ __('Logo') }}" name="photo"
-                preview="{{ $selectedModel->logo ?? '' }}" :photo="$photo"
-                :photoInfo="$photoInfo" types="PNG or JPEG" rules="image/*" />
-            <x-checkbox title="{{ __('Active') }}" name="is_active" :defer="false" /> 
+            <x-media-upload title="{{ __('Photo') }}" name="photo" preview="{{ $selectedModel->logo ?? '' }}"
+                :photo="$photo" :photoInfo="$photoInfo" types="PNG or JPEG" rules="image/*" />
+            <x-media-upload title="{{ __('Icon') }}" name="secondPhoto" preview="{{ $selectedModel->icon ?? '' }}"
+                :photo="$secondPhoto" :photoInfo="$secondPhotoInfo" types="PNG or JPEG" rules="image/*" />
+            <x-checkbox title="{{ __('Active') }}" name="is_active" :defer="false" />
         </x-modal>
     </div>
     {{-- update form --}}
@@ -30,10 +31,11 @@
             <x-input title="{{ __('Distance Fare') }}(/km)" name="distance_fare" />
             <x-input title="{{ __('Fare Per Minutes') }}" name="time_fare" />
             <x-input title="{{ __('Minimum Fare') }}" name="min_fare" />
-            <x-media-upload title="{{ __('Logo') }}" name="photo"
-                preview="{{ $selectedModel->photo ?? '' }}" :photo="$photo"
-                :photoInfo="$photoInfo" types="PNG or JPEG" rules="image/*" />
-            <x-checkbox title="{{ __('Active') }}" name="is_active" :defer="false" /> 
+            <x-media-upload title="{{ __('Photo') }}" name="photo" preview="{{ $selectedModel->photo ?? '' }}"
+                :photo="$photo" :photoInfo="$photoInfo" types="PNG or JPEG" rules="image/*" />
+            <x-media-upload title="{{ __('Icon') }}" name="secondPhoto" preview="{{ $selectedModel->icon ?? '' }}"
+                :photo="$secondPhoto" :photoInfo="$secondPhotoInfo" types="PNG or JPEG" rules="image/*" />
+            <x-checkbox title="{{ __('Active') }}" name="is_active" :defer="false" />
 
         </x-modal>
     </div>

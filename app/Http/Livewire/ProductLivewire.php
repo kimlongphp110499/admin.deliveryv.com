@@ -42,6 +42,7 @@ class ProductLivewire extends ProductTimingLivewire
     public $isActive = 1;
     public $in_order = 1;
     public $age_restricted = 0;
+    public $featured = 0;
 
     //
     public $menusIDs = [];
@@ -67,6 +68,13 @@ class ProductLivewire extends ProductTimingLivewire
 
     //option groups + options
     public $optionGroups = [];
+
+
+    //
+    public $vendors = [];
+    public $menus = [];
+    public $categories = [];
+    public $subcategories = [];
 
 
 
@@ -98,13 +106,7 @@ class ProductLivewire extends ProductTimingLivewire
 
     public function render()
     {
-
-        return view('livewire.products', [
-            "vendors" => [],
-            "menus" => Menu::active()->where('vendor_id', $this->vendorID)->get(),
-            "categories" => [],
-            "subcategories" => [],
-        ]);
+        return view('livewire.products');
     }
 
     //for tag select
@@ -285,6 +287,7 @@ class ProductLivewire extends ProductTimingLivewire
         $this->emit('loadSummerNote', "newContent", "");
     }
 
+
     public function save()
     {
 
@@ -311,7 +314,7 @@ class ProductLivewire extends ProductTimingLivewire
             $model->package_count = $this->package_count;
             $model->available_qty = !empty($this->available_qty) ? $this->available_qty : null;
             $model->vendor_id = $this->vendorID ?? \Auth::user()->vendor_id;
-            $model->featured = false;
+            $model->featured = $this->featured ?? false;
             $model->plus_option = $this->plus_option ?? false;
             $model->digital = $this->digital ?? false;
             $model->deliverable = $this->digital ? false : $this->deliverable;
@@ -412,6 +415,7 @@ class ProductLivewire extends ProductTimingLivewire
         $this->digital = $this->selectedModel->digital;
         $this->deliverable = $this->selectedModel->deliverable;
         $this->isActive = $this->selectedModel->is_active;
+        $this->featured = $this->selectedModel->featured;
         $this->in_order = $this->selectedModel->in_order;
         $this->age_restricted = $this->selectedModel->age_restricted;
 
@@ -473,6 +477,9 @@ class ProductLivewire extends ProductTimingLivewire
             "name" => 'vendor_id',
         ];
         $this->emit('vendor_idUpdated', $payload);
+        $this->autocompleteVendorSelected([
+            "id" => $this->vendorID,
+        ]);
     }
 
     public function update()
@@ -507,6 +514,7 @@ class ProductLivewire extends ProductTimingLivewire
             $model->digital = $this->digital;
             $model->deliverable = $this->digital ? false : $this->deliverable;
             $model->is_active = $this->isActive;
+            $model->featured = $this->featured ?? false;
             $model->in_order = $this->in_order;
             $model->age_restricted = $this->age_restricted;
             $model->save();

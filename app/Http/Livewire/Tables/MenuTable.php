@@ -4,12 +4,14 @@ namespace App\Http\Livewire\Tables;
 
 use App\Models\Menu;
 use App\Models\Vendor;
+use App\Traits\DBTrait;
 use Rappasoft\LaravelLivewireTables\Views\Column;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MenuTable extends OrderingBaseDataTableComponent
 {
-
+    use DBTrait;
     public $model = Menu::class;
 
 
@@ -43,5 +45,27 @@ class MenuTable extends OrderingBaseDataTableComponent
         ];
 
         return $columns;
+    }
+
+    public function deleteModel()
+    {
+
+        try {
+            $this->isDemo();
+            DB::beginTransaction();
+            $menuId = $this->selectedModel->id;
+            $tables = $this->getTablesWithColumn("menu_id");
+            foreach ($tables as $table) {
+                DB::table("$table")
+                    ->where('menu_id', $menuId)
+                    ->update(['menu_id' => null]);
+            }
+            $this->selectedModel->delete();
+            DB::commit();
+            $this->showSuccessAlert(__("Deleted"));
+        } catch (\Exception $error) {
+            DB::rollBack();
+            $this->showErrorAlert($error->getMessage() ?? "Failed");
+        }
     }
 }

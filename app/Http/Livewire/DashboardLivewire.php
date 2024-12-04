@@ -21,6 +21,32 @@ class DashboardLivewire extends Component
     public function render()
     {
 
+        return view(
+            'livewire.dashboard',
+            [    
+                "totalOrders" => $this->getTotalOrdersProperty(),
+                "totalEarnings" => $this->getTotalEarningsProperty(),
+                "totalVendors" => $this->getTotalVendorsProperty(),
+                "totalClients" => $this->getTotalClientsProperty(),
+
+                 "earningChart" => $this->getEarningChartProperty(),
+                "usersChart" => $this->getUsersChartProperty(),
+                "vendorsChart" => $this->getVendorsChartProperty(),
+                "ordersChart" => $this->getOrdersChartProperty(),
+                "topSaleDaysChart" => $this->getTopSaleDaysChartProperty(),
+                "topSaleTimingChart" => $this->getTopSaleTimingChartProperty(),
+                "userRolesChart" => $this->getUserRolesChartProperty(),
+            ]
+        );
+    }
+
+
+    public function getTotalOrdersProperty()
+    {
+        return Number::n(Order::mine()->count())->round(3)->getSuffixNotation();
+    }
+    public function getTotalEarningsProperty()
+    {
         $user = User::find(\Auth::id());
         if ($user->hasRole('admin')) {
             if (\Schema::hasColumn("commissions", 'admin_commission')) {
@@ -48,31 +74,23 @@ class DashboardLivewire extends Component
             }
             $totalEarnings = Number::n($earnedAmount)->round(3)->getSuffixNotation();
         }
+        return $totalEarnings;
+    }
 
-        $totalOrders = Number::n(Order::mine()->count())->round(3)->getSuffixNotation();
-        $totalVendors = Number::n(Vendor::mine()->count())->round(3)->getSuffixNotation();
-        $totalClients = Number::n(User::client()->count())->round(3)->getSuffixNotation();
 
-        return view('livewire.dashboard', [
-            "totalOrders" => $totalOrders,
-            "totalEarnings" => $totalEarnings,
-            "totalVendors" => $totalVendors,
-            "totalClients" => $totalClients,
-
-            "earningChart" => $this->earningChart(),
-            "usersChart" => $this->usersChart(),
-            "vendorsChart" => $this->vendorsChart(),
-            "ordersChart" => $this->ordersChart(),
-            "topSaleDaysChart" => $this->topOrderDaysChart(),
-            "topSaleTimingChart" => $this->topSaleTimingChart(),
-            "userRolesChart" => $this->userRolesChart(),
-        ]);
+    public function getTotalVendorsProperty()
+    {
+        return Number::n(Vendor::mine()->count())->round(3)->getSuffixNotation();
+    }
+    public function getTotalClientsProperty()
+    {
+        return Number::n(User::client()->count())->round(3)->getSuffixNotation();
     }
 
 
 
 
-    public function earningChart()
+    public function getEarningChartProperty()
     {
 
         //
@@ -117,7 +135,7 @@ class DashboardLivewire extends Component
         return $chart;
     }
 
-    public function usersChart()
+    public function getUsersChartProperty()
     {
 
         //
@@ -140,7 +158,7 @@ class DashboardLivewire extends Component
         return $chart;
     }
 
-    public function vendorsChart()
+    public function getVendorsChartProperty()
     {
 
         //
@@ -164,7 +182,7 @@ class DashboardLivewire extends Component
     }
 
 
-    public function ordersChart()
+    public function getOrdersChartProperty()
     {
 
         //
@@ -186,7 +204,7 @@ class DashboardLivewire extends Component
         return $chart;
     }
 
-    public function userRolesChart()
+    public function getUserRolesChartProperty()
     {
 
         //
@@ -208,7 +226,7 @@ class DashboardLivewire extends Component
     }
 
 
-    public function topOrderDaysChart()
+    public function getTopSaleDaysChartProperty()
     {
         //
         $chart = (new ColumnChartModel())->setTitle(__('Total Ordering Days') . ' (' . Date("Y") . ')')->withOutLegend();
@@ -240,7 +258,7 @@ class DashboardLivewire extends Component
         return $chart;
     }
 
-    public function topSaleTimingChart()
+    public function getTopSaleTimingChartProperty()
     {
         //
         $chart = (new ColumnChartModel())->setTitle(__('Avg. Ordering Period') . ' (' . __("30days") . ')')->setHorizontal(true)->withOutLegend();

@@ -56,7 +56,7 @@ class FleetUsersLivewire extends BaseLivewireComponent
 
     public function getRoles()
     {
-        return Role::whereIn('name', ['driver','fleet-manager'])->get();
+        return Role::whereIn('name', ['driver', 'fleet-manager'])->get();
     }
 
     public function updatedRole($value)
@@ -105,7 +105,7 @@ class FleetUsersLivewire extends BaseLivewireComponent
             $user->save();
 
             if (!empty($this->role)) {
-                $user->assignRole($this->role);
+                $user->syncRoles($this->role);
             }
 
             //assgin to current user fleet
@@ -139,7 +139,6 @@ class FleetUsersLivewire extends BaseLivewireComponent
             $this->commission = $this->selectedModel->commission;
             $this->walletBalance = $this->selectedModel->wallet->balance ?? 0.00;
             $this->emit('showEditModal');
-
         } catch (Exception $error) {
             $this->showErrorAlert($error->getMessage() ?? __("Edit User") . " " . __('failed!'));
         }

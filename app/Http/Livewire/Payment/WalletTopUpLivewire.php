@@ -50,7 +50,8 @@ class WalletTopUpLivewire extends BaseLivewireComponent
         if (!in_array($this->selectedModel->status, ['pending'])) {
             //payment already processed
             $link = route('payment.processed', ["code" => $this->selectedModel->ref, "type" => "wallet"]);
-            return redirect()->away($link);
+            // return redirect()->away($link);
+            return view('livewire.payment.processed')->layout('layouts.guest');
         } else {
             return view('livewire.payment.wallet', [
                 "transaction" => $this->selectedModel,

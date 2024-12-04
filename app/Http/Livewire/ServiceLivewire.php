@@ -29,7 +29,7 @@ class ServiceLivewire extends BaseLivewireComponent
     public $category_id;
     public $subcategory_id;
     public $photos = [];
-    public $durationTypes = [];
+    // public $durationTypes = [];
     public $subcategories = [];
 
     //
@@ -71,11 +71,14 @@ class ServiceLivewire extends BaseLivewireComponent
 
     public function render()
     {
-        if (empty($this->durationTypes)) {
-            $this->durationTypes = Service::getPossibleEnumValues('duration');
-            $this->duration = $this->durationTypes[0];
-        }
         return view('livewire.services.service');
+    }
+
+    public function getDurationTypesProperty()
+    {
+        $dataSet = Service::getPossibleEnumValues('duration');
+        $this->duration = $dataSet[0];
+        return $dataSet;
     }
 
     //

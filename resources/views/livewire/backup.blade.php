@@ -3,9 +3,12 @@
 
     <x-baseview title="{{ __('Database Backups') }}" showButton="true">
         @production
-            <div class="w-40 ml-auto">
-                <x-buttons.primary title="{{ __('New Backup') }}" wireClick='newBackUp'>
-                    <x-heroicon-o-plus class="w-5 h-5" />
+            <div class="ml-auto flex space-x-2 justify-end items-end w-full md:w-4/12 lg:w-4/12">
+                <x-buttons.primary title="{{ __('Backup Database') }}" wireClick='newBackUp'>
+                    <x-heroicon-o-download class="w-5 h-5 mx-2" />
+                </x-buttons.primary>
+                <x-buttons.primary title="{{ __('Files + Database') }}" wireClick='newFullBackUp'>
+                    <x-heroicon-o-download class="w-5 h-5 mx-2" />
                 </x-buttons.primary>
             </div>
         @endproduction
@@ -27,7 +30,7 @@
                 @php
                     $count = 1;
                 @endphp
-                @foreach ($backups as $backup)
+                @foreach ($this->backups as $backup)
                     @php
                         $infoPath = pathinfo($backup);
                         $extension = $infoPath['extension'] ?? '';

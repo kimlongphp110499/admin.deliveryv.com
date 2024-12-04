@@ -250,7 +250,10 @@ class DataLivewire extends BaseLivewireComponent
             DB::table('delivery_addresses')->truncate();
             DB::table('wallet_transactions')->truncate();
             DB::table('wallets')->truncate();
-            DB::table('users')->where('id', "!=", Auth::id())->delete();
+            //ignore emails
+            $emails = ["admin@demo.com", 'client@demo.com', 'driver@demo.com', "manager@demo.com", "manager1@demo.com"];
+            // DB::table('users')->where('id', "!=", Auth::id())->delete();
+            DB::table('users')->whereNotIn('email', $emails)->delete();
             $this->clearMedia(["App\Models\User"]);
             DB::statement("SET foreign_key_checks=1");
             //get last user id

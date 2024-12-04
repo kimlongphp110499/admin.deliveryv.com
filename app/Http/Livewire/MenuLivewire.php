@@ -23,7 +23,15 @@ class MenuLivewire extends BaseLivewireComponent
 
     protected $rules = [
         "name" => "required|string",
+        "vendor_id" => "required|exists:vendors,id",
     ];
+
+    public function mount()
+    {
+        if (User::find(Auth::id())->role('manager')) {
+            $this->vendor_id = Auth::user()->vendor_id;
+        }
+    }
 
     public function render()
     {
@@ -49,12 +57,7 @@ class MenuLivewire extends BaseLivewireComponent
             $model = new Menu();
             $model->name = $this->name;
             $model->is_active = $this->isActive;
-            //
-            if (User::find(Auth::id())->role('manager')) {
-                $model->vendor_id = Auth::user()->vendor_id;
-            } else {
-                $model->vendor_id = $this->vendor_id ?? null;
-            }
+            $model->vendor_id = $this->vendor_id;
             $model->save();
             DB::commit();
 

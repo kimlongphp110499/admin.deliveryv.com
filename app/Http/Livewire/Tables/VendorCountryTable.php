@@ -22,7 +22,9 @@ class VendorCountryTable extends BaseDataTableComponent
             Column::make(__('ID'), "id")->sortable(),
             Column::make(__('Name'), 'country.name')->searchable()->sortable(),
             $this->activeColumn(),
-            $this->actionsColumn('components.buttons.edit'),
+            $this->customActionsColumn(
+                false
+            ),
         ];
     }
 }

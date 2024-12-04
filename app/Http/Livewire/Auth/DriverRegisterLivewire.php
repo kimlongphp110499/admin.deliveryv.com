@@ -119,7 +119,7 @@ class DriverRegisterLivewire extends BaseLivewireComponent
             $user->is_active = false;
             $user->save();
             //assign role
-            $user->assignRole('driver');
+            $user->syncRoles('driver');
 
             //taxi section
             if ($this->driverType == "taxi") {

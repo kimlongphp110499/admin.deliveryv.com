@@ -45,6 +45,12 @@
                 <x-heroicon-o-shopping-cart class="w-5 h-5" />
             </x-menu-item>
 
+            @can('view-favourites')
+                <x-menu-item title="{{ __('Favourites') }}" route="vendor.favourites">
+                    <x-heroicon-o-star class="w-5 h-5" />
+                </x-menu-item>
+            @endcan
+
             {{-- vendors documents --}}
             @can('view-vendor-documents')
                 <x-menu-item title="{{ __('Document Requests') }}" route="vendors.documents">

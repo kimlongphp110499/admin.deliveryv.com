@@ -10,6 +10,10 @@ use App\Models\Day;
 
 trait ProductAttributeTrait
 {
+
+    use GoogleMapApiTrait;
+
+    //
     public $digitalFilePath = "secure/product/files";
 
     public function clearDigitalFiles()
@@ -80,6 +84,18 @@ trait ProductAttributeTrait
         return $this->hasMany('App\Models\OrderProduct')->whereHas("order", function ($query) {
             return $query->where('payment_status', "successful")
                 ->currentStatus("delivered");
+        });
+    }
+
+
+    public function scopeByDeliveryZone($query, $latitude, $longitude)
+    {
+        $deliveryZonesIds = $this->getDeliveryZonesByLocation($latitude, $longitude);
+        //where has vendors that has delivery zones
+        return $query->whereHas("vendor", function ($query) use ($deliveryZonesIds) {
+            $query->whereHas('delivery_zones', function ($query) use ($deliveryZonesIds) {
+                $query->whereIn('delivery_zone_id', $deliveryZonesIds);
+            })->orWhereDoesntHave("delivery_zones");
         });
     }
 }

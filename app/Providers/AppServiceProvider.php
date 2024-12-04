@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use anlutro\LaravelSettings\Facades\Setting;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Exception;
 use App\Rules\ValidPhoneNumber;
 use App\Services\Core\ExtraPhoneNumberValidationService;
+use App\Services\CustomDatabaseSettingStore;
 use Propaganistas\LaravelPhone\Rules\Phone as CustomPhoneRule;
 
 class AppServiceProvider extends ServiceProvider
@@ -51,7 +53,7 @@ class AppServiceProvider extends ServiceProvider
         if (!app()->runningInConsole()) {
             //
             try {
-                if ($isDBConnected && !Schema::hasTable('settings')) {
+                if (!$isDBConnected || ($isDBConnected && !Schema::hasTable('settings'))) {
                     $currentRoute = $this->app->request->getRequestUri();
                     if (!str_contains($currentRoute, "/install")) {
                         redirect("install")->send();
@@ -198,10 +200,17 @@ class AppServiceProvider extends ServiceProvider
             $passed = (new CustomPhoneRule())->setValidator($validator)->passes($attribute, $value);
             //check if the validator rule has failed
             if (!$passed) {
+                //trim spaces
+                $value = str_replace(" ", "", $value);
                 $passed = ExtraPhoneNumberValidationService::validateCustomRegex($value);
                 return $passed;
             }
             return true; // If all checks pass, return true
+        });
+
+        //force queue:restart after saving settings
+        Setting::extend('customDatabaseSettingStore', function ($app) {
+            return $app->make(CustomDatabaseSettingStore::class);
         });
     }
 }

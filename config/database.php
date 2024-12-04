@@ -71,6 +71,32 @@ return [
             ]
         ],
 
+        'mysql_secondary' => [
+            'driver' => 'mysql',
+            'host' => env('DB_SECONDARY_HOST', '127.0.0.1'),
+            'port' => env('DB_SECONDARY_PORT', '3306'),
+            'database' => env('DB_SECONDARY_DATABASE', 'forge'),
+            'username' => env('DB_SECONDARY_USERNAME', 'forge'),
+            'password' => env('DB_SECONDARY_PASSWORD', ''),
+            'unix_socket' => env('DB_SECONDARY_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+            'dump' => [
+                'dump_binary_path' => '/usr/bin', // only the path, so without `mysqldump` or `pg_dump`
+                // 'dump_binary_path' => '/usr/local/Cellar/mysql-client@5.7/5.7.32/bin', // for macos
+                'use_single_transaction',
+                'timeout' => 60 * 5, // 5 minute timeout
+                'exclude_tables' => ['table1', 'table2'],
+                //'add_extra_option' => '--optionname=optionvalue', // for example '--column_statistics=0'
+            ]
+        ],
+
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL'),

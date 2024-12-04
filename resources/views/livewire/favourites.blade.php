@@ -1,8 +1,8 @@
-@section('title',  __('Favourites') )
-    <div>
+@section('title', __('Product Favourites'))
+<div>
 
-        <x-baseview title="{{ __('Favourites') }}">
-            <livewire:tables.favourite-table />
-        </x-baseview>
+    <x-baseview title="{{ __('Product Favourites') }}">
+        <livewire:tables.favourite-table />
+    </x-baseview>
 
-    </div>
+</div>

@@ -16,17 +16,21 @@ class VehicleTypeTable extends BaseDataTableComponent
         return VehicleType::query();
     }
 
-    public function columns():array
+    public function setTableRowClass($row): ?string
+    {
+        return $row->is_active ? null : 'inactive-item';
+    }
+
+    public function columns(): array
     {
         return [
-            Column::make(__('ID'),"id")->searchable()->sortable(),
+            Column::make(__('ID'), "id")->searchable()->sortable(),
             $this->smImageColumn(),
-            Column::make(__('Name'),'name')->searchable(),
-            Column::make(__('Base Fare'),'base_fare')->searchable(),
-            Column::make(__('Distance Fare')."/km",'distance_fare')->searchable(),
-            Column::make(__('Fare Per Minutes'),'time_fare')->searchable(),
-            Column::make(__('Minimum Fare'),'min_fare')->searchable(),
-            $this->activeColumn(),
+            Column::make(__('Name'), 'name')->searchable(),
+            Column::make(__('Base Fare'), 'base_fare')->searchable(),
+            Column::make(__('Distance Fare') . "/km", 'distance_fare')->searchable(),
+            Column::make(__('Fare Per Minutes'), 'time_fare')->searchable(),
+            Column::make(__('Minimum Fare'), 'min_fare')->searchable(),
             $this->actionsColumn('components.buttons.no_delete_actions'),
         ];
     }

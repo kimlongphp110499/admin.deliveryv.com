@@ -15,7 +15,7 @@
             </div>
             <x-input title="{{ __('Login Password') }}" name="password" type="password"
                 placeholder="**********************" />
-            <x-select title="{{ __('Role') }}" :options='$roles' name="role" :defer="false" />
+            <x-select title="{{ __('Role') }}" :options='$this->roles' name="role" :defer="false" />
 
             @if (($roleName ?? '') == 'driver')
                 <x-input title="{{ __('Commission') }}" name="commission" placeholder="" />
@@ -26,6 +26,7 @@
                 <a href="{{ route('wallet.transactions') }}"
                     class="underline text-primary-500">{{ __('Wallet Transactions') }}</a>
             </p>
+            <x-form-errors />
 
         </x-modal>
     </div>
@@ -42,7 +43,7 @@
             </div>
             <x-input title="{{ __('Login Password') }}" name="password" type="password"
                 placeholder="**********************" />
-            <x-select title="{{ __('Role') }}" :options='$roles' name="role" :defer="false" />
+            <x-select title="{{ __('Role') }}" :options='$this->roles' name="role" :defer="false" />
             @if (($roleName ?? '') == 'driver')
                 <x-input title="{{ __('Commission') }}" name="commission" placeholder="" />
             @endif
@@ -52,6 +53,7 @@
                 <a href="{{ route('wallet.transactions') }}"
                     class="underline text-primary-500">{{ __('Wallet Transactions') }}</a>
             </p>
+            <x-form-errors />
 
         </x-modal>
     </div>
@@ -92,7 +94,19 @@
                 @if (($selectedModel->role_name ?? '') == 'driver')
                     <x-details.item title="{{ __('Commission') }}%" text="{{ $selectedModel->commission ?? '' }}" />
                 @endif
-                <x-details.item title="{{ __('Role') }}" text="{{ $selectedModel->role_name ?? '' }}" />
+                <x-details.item title="{{ __('Role') }}">
+                    @php
+                        $roles = $selectedModel->roles ?? [];
+                        $roleCollection = collect($roles);
+                        $roleNames = $roleCollection
+                            ->map(function ($role) {
+                                return $role->name ?? '';
+                            })
+                            ->toArray();
+                        $roleNames = implode(', ', $roleNames);
+                    @endphp
+                    <x-details.p text="{{ $roleNames ?? '' }}" />
+                </x-details.item>
 
                 <div>
                     <x-label title="{{ __('Status') }}" />

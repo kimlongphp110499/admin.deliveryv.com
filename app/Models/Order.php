@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Traits\CustomHasStatuses;
 use App\Traits\FirebaseMessagingTrait;
 use App\Traits\FirebaseDBTrait;
 use App\Traits\OrderAttributeTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Spatie\ModelStatus\HasStatuses;
 use Illuminate\Support\Facades\Schema;
 use Kirschbaum\PowerJoins\PowerJoins;
 
@@ -16,7 +16,7 @@ class Order extends BaseModel
     use PowerJoins;
 
     use FirebaseMessagingTrait, FirebaseDBTrait;
-    use HasStatuses, OrderAttributeTrait;
+    use CustomHasStatuses, OrderAttributeTrait;
 
 
     // protected $fillable = ["note", "reason", "sub_total", "total", "driver_id", "delivery_fee", "payment_method_id"];
@@ -127,6 +127,13 @@ class Order extends BaseModel
         return $this->hasOne('App\Models\AutoAssignment', 'order_id', 'id')->where('status', "pending");
     }
 
+    //review relationship
+    public function reviews()
+    {
+        return $this->hasMany('App\Models\Review', 'order_id', 'id');
+    }
+
+
     public function getPickupLocationAttribute()
     {
         if (count($this->stops) > 0) {
@@ -222,6 +229,9 @@ class Order extends BaseModel
 
     public function getCanEditProductsAttribute()
     {
+        if ($this->vendor == null) {
+            return false;
+        }
         return !in_array(($this->vendor->vendor_type->slug ?? ''), ["taxi", "parcel", "service", "booking"]);
     }
 

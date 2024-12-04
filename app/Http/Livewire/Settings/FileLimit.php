@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Settings;
 
+use Exception;
 
 class FileLimit extends BaseSettingsComponent
 {
@@ -22,6 +23,8 @@ class FileLimit extends BaseSettingsComponent
     //prescription file limit
     public $prescription_file_limit;
     public $prescription_file_size_limit;
+    //documents
+    public $document_limit;
 
 
     public function mount()
@@ -55,6 +58,8 @@ class FileLimit extends BaseSettingsComponent
         //prescription file limit
         $this->prescription_file_limit = setting('filelimit.prescription.file_limit', 2);
         $this->prescription_file_size_limit = setting('filelimit.prescription.file_size_limit', 300);
+        //
+        $this->document_limit = setting('filelimit.document_limit', 300);
     }
 
     public function saveFileLimits()
@@ -81,6 +86,8 @@ class FileLimit extends BaseSettingsComponent
                     //prescription file limit
                     "prescription.file_limit" => $this->prescription_file_limit,
                     "prescription.file_size_limit" => $this->prescription_file_size_limit,
+                    //
+                    "document_limit" => $this->document_limit,
                 ]
             ])->save();
 

@@ -10,10 +10,13 @@ class Favourite extends BaseModel
         return $this->belongsTo('App\Models\Product', 'product_id', 'id');
     }
 
+    public function vendor()
+    {
+        return $this->belongsTo('App\Models\Vendor', 'vendor_id', 'id');
+    }
+
     public function user()
     {
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
-
-
 }
