@@ -18,6 +18,13 @@ class ProductController extends Controller
 
     use GoogleMapApiTrait;
 
+    protected $productsPerPage;
+
+    public function __construct(Request $request)
+    {
+        $this->productsPerPage = 15;
+    }
+
     public function index(Request $request)
     {
 
