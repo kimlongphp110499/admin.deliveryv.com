@@ -181,6 +181,37 @@ class Product extends BaseModel
         return ($this->discount_price != null && $this->discount_price > 0) ? $this->discount_price : $this->price;
     }
 
+    public function getPhotoAttribute()
+    {
+        $mediaJson = $this->getMedia() ?? null;
+
+        if (!$mediaJson) {
+            return asset('images/default.png');
+        }
+
+        $mediaArray = json_decode($mediaJson, true);
+        if (!isset($mediaJson[0]['original_url'])) {
+            return asset('images/default.png');
+        }
+    
+        $originalUrl = $mediaArray[0]['original_url'];
+    
+        $id = $mediaArray[0]['id'];
+        $fileName = $mediaArray[0]['file_name'];
+
+        $allFiles = \Storage::disk('public')->allFiles();
+        
+        $fileFound = collect($allFiles)->first(fn($file) => basename($file) === $fileName);
+        
+        if ($fileFound) {
+            return \Storage::disk('public')->url($fileFound);
+        } else {
+            return asset('images/default.jpg');
+        }
+    
+        return asset('images/default.png');
+    }
+
     public function getPhotosAttribute()
     {
         $mediaItems = $this->getMedia('default');
