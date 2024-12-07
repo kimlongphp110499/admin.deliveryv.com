@@ -196,20 +196,29 @@ class Product extends BaseModel
     
         $originalUrl = $mediaArray[0]['original_url'];
     
-        $id = $mediaArray[0]['id'];
-        $fileName = $mediaArray[0]['file_name'];
+        $isAccessible = \Cache::remember("photo_accessible_" . md5($originalUrl), 3600, function () use ($originalUrl) {
+            return $this->isUrlAccessible($originalUrl);
+        });
 
-        $allFiles = \Storage::disk('public')->allFiles();
-        
-        $fileFound = collect($allFiles)->first(fn($file) => basename($file) === $fileName);
-        
-        if ($fileFound) {
-            return \Storage::disk('public')->url($fileFound);
-        } else {
-            return asset('images/default.jpg');
+        if ($isAccessible) {
+            return $originalUrl;
         }
     
         return asset('images/default.png');
+    }
+
+    public function isUrlAccessible(string $url): bool
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+    
+        return $httpCode === 200;
     }
 
     public function getPhotosAttribute()

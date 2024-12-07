@@ -128,22 +128,22 @@ return [
     'notifications' => [
 
         'notifications' => [
-            \Spatie\Backup\Notifications\Notifications\BackupHasFailed::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFound::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupHasFailed::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\BackupWasSuccessful::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFound::class => ['mail'],
-            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessful::class => ['mail'],
+            \Spatie\Backup\Notifications\Notifications\BackupHasFailed::class => [],
+            \Spatie\Backup\Notifications\Notifications\UnhealthyBackupWasFound::class => [],
+            \Spatie\Backup\Notifications\Notifications\CleanupHasFailed::class => [],
+            \Spatie\Backup\Notifications\Notifications\BackupWasSuccessful::class => [],
+            \Spatie\Backup\Notifications\Notifications\HealthyBackupWasFound::class => [],
+            \Spatie\Backup\Notifications\Notifications\CleanupWasSuccessful::class => [],
         ],
 
         /*
          * Here you can specify the notifiable to which the notifications should be sent. The default
          * notifiable will use the variables specified in this config file.
          */
-        'notifiable' => \Spatie\Backup\Notifications\Notifiable::class,
+        'notifiable' => null,
 
         'mail' => [
-            'to' => '',
+            'to' => null,
 
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),

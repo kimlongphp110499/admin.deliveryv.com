@@ -176,6 +176,11 @@ use App\Http\Livewire\ReportLivewire;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::domain('baocao.deliveryv.com')->group(function () {
+    Route::get('/gov', function () {
+        return 'Báo cáo dành cho chính phủ';
+    });
+});
 Route::get('/analytics', [GoogleAnalyticsController::class, 'index'])->name('analytics.index');
 
 Route::group(['middleware' => ['web', 'check_ct_account']], function () {
