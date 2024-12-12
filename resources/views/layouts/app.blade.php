@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="{{ setting('favicon') }}" />
     <title>@yield('title', '') - {{ setting('websiteName', env('APP_NAME')) }}</title>
+    @include('layouts.partials.google_tags')
     @include('layouts.partials.styles')
     @yield('styles')
     @stack('styles')
@@ -16,11 +17,12 @@
     <div class="flex h-screen bg-gray-50" :class="{ 'overflow-hidden': isSideMenuOpen }">
 
         <!-- Desktop sidebar -->
+        @if(!Auth::user()->is_ct_account)
         @include('layouts.partials.nav.desktop')
 
         <!-- Mobile sidebar -->
         @include('layouts.partials.nav.mobile')
-
+        @endif
         <div class="flex flex-col flex-1 w-full">
 
             {{-- header --}}

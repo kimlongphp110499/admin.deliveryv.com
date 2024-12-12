@@ -72,5 +72,9 @@ class Kernel extends HttpKernel
         'allow.production' => \App\Http\Middleware\AllowInProduction::class,
         'restrict_roles' => \App\Http\Middleware\RestrictRolesMiddleware::class,
         'user.active.check' => \App\Http\Middleware\UserActiveCheck::class,
+        
+        //code_yourself
+        'check_ct_account' => \App\Http\Middleware\CheckCtAccount::class,
+        //code_yourself
     ];
 }

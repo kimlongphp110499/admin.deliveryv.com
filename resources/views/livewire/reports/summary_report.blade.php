@@ -11,7 +11,7 @@
             <div class="grid grid-cols-2 gap-4 mt-1 mb-6 md:grid-cols-3">
                 <x-input type="date" name="startDate" />
                 <x-input type="date" name="endDate" />
-                <x-buttons.primary title="{{ __('Show') }}" />
+                <x-buttons.primary style="margin-top: 0.25rem;" title="{{ __('Show') }}" />
             </div>
             </x-form>
             {{-- money  --}}

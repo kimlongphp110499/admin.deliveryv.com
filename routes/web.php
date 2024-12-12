@@ -22,6 +22,7 @@ use App\Http\Livewire\ProductLivewire;
 use App\Http\Livewire\ProductDetailsLivewire;
 use App\Http\Livewire\ProductRequestLivewire;
 use App\Http\Livewire\FavouriteLivewire;
+use App\Http\Livewire\FavouriteVendorLivewire;
 use App\Http\Livewire\ReviewLivewire;
 use App\Http\Livewire\ProductReviewLivewire;
 use App\Http\Livewire\OptionGroupLivewire;
@@ -161,9 +162,9 @@ use App\Http\Livewire\VendorEarningHistoryLivewire;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\CMSPageController;
-//use App\Http\Controllers\GoogleAnalyticsController;
+use App\Http\Controllers\GoogleAnalyticsController;
 //for bo cong thuong
-//use App\Http\Livewire\ReportLivewire;
+use App\Http\Livewire\ReportLivewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -177,9 +178,9 @@ use App\Http\Controllers\CMSPageController;
 */
 Route::get('/analytics', [GoogleAnalyticsController::class, 'index'])->name('analytics.index');
 
-Route::group(['middleware' => ['web']], function () {
+Route::group(['middleware' => ['web', 'check_ct_account']], function () {
 
-
+    /*
     Route::get('preview/mail', function (Request $request) {
         return;
         //New vendor mail
@@ -222,10 +223,9 @@ Route::group(['middleware' => ['web']], function () {
         // $order = App\Models\Order::whereHas('package_type')->first();
         return new App\Mail\OrderUpdateMail($order);
     });
+    */
 
 
-    //redirect api to authenticated web route
-    Route::get('/auth/redirect', [AuthRedirectController::class, 'index']);
     //empty
     Route::get('driver/document/instructions', function () {
         return  setting('page.settings.driverDocumentInstructions', __('Documents'));
@@ -255,29 +255,15 @@ Route::group(['middleware' => ['web']], function () {
     Route::get('password/update/{code}/{email}', PasswordResetLivewire::class)->name('password.reset.link');
     Route::get('preview/share/{type}/{mId}', SharePreviewLivewire::class)->name('preview.share');
 
-
-    // Pages
-    Route::get('privacy/policy', function () {
-        return view('layouts.includes.privacy');
-    })->name('privacy');
-
-    Route::get('pages/contact', function () {
-        return view('layouts.includes.contact');
-    })->name('contact');
-
-    Route::get('pages/terms', function () {
-        return view('layouts.includes.terms');
-    })->name('terms');
-    //
-    Route::get('support/chat', InAppSupportPageLivewire::class)->name('support.chat');
-    Route::get('cms/{slug}', [CMSPageController::class, 'index'])->name('cms.page');
-
     // AUth routes
     Route::group(['middleware' => ['auth', 'restrict_roles:client,driver', "user.active.check"]], function () {
 
         //
         Route::get('profile', ProfileLivewire::class)->name('profile');
-        Route::get('', DashboardLivewire::class)->name('dashboard');
+        Route::get('dashboard', DashboardLivewire::class)->name('dashboard');
+        Route::get('', function () {
+            return redirect()->route('dashboard');
+        });
         Route::get('product/products', ProductLivewire::class)->name('products');
         Route::get('product/details/{id}', ProductDetailsLivewire::class)->name('product.details');
         Route::get('product/requests', ProductRequestLivewire::class)->name('products.requests');
@@ -528,6 +514,10 @@ Route::group(['middleware' => ['web']], function () {
             ->middleware(['permission:view-in-app-support']);
         Route::get('reports/summary', SummaryReportLivewire::class)->name('reports.summary')
             ->middleware(['permission:view-summary-report']);
+        //for bct
+        Route::get('baocao/gov', ReportLivewire::class)->name('baocao.gov')
+            ->middleware(['permission:view-summary-report']);
+
         Route::get('reports/loyalty', LoyaltyReportLivewire::class)->name('reports.loyalty')
             ->middleware(['permission:view-loyalty']);
         Route::get('misc/onboarding', OnboardingLivewire::class)->name('onboarding')
@@ -561,6 +551,10 @@ Route::group(['middleware' => ['web']], function () {
             ->middleware(['permission:view-vendor-documents']);
         Route::get('drivers/documents', DriverDocumentRequestLivewire::class)->name('drivers.documents')
             ->middleware(['permission:view-driver-documents']);
+
+        //favourites
+        Route::get('vendors/favourites', FavouriteVendorLivewire::class)->name('vendor.favourites')
+            ->middleware(['permission:view-favourites']);
     });
 
 
