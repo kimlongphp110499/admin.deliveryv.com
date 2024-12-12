@@ -161,6 +161,9 @@ use App\Http\Livewire\VendorEarningHistoryLivewire;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\CMSPageController;
+//use App\Http\Controllers\GoogleAnalyticsController;
+//for bo cong thuong
+//use App\Http\Livewire\ReportLivewire;
 
 /*
 |--------------------------------------------------------------------------
@@ -172,6 +175,7 @@ use App\Http\Controllers\CMSPageController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/analytics', [GoogleAnalyticsController::class, 'index'])->name('analytics.index');
 
 Route::group(['middleware' => ['web']], function () {
 
@@ -356,7 +360,7 @@ Route::group(['middleware' => ['web']], function () {
             Route::get('operations/imports', ImportLivewire::class)->name('imports');
             Route::get('operations/exports', ExportLivewire::class)->name('exports');
             Route::get('operations/backup', BackUpLivewire::class)->name('backups');
-            Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
+                Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
             Route::get('operations/data/clear', DataLivewire::class)->name('data.clear');
             // Route::get('jobs/monitor', '\romanzipp\QueueMonitor\Controllers\ShowQueueMonitorController')->name('job-monitor');
             Route::prefix('jobs')->group(function () {
