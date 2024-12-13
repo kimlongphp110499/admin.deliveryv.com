@@ -1,1 +1,0 @@
-<?php echo e(currencyFormat($model->total, $currency = ($model->taxi_order != null && $model->taxi_order->currency != null ) ? $model->taxi_order->currency->symbol : setting('currency', '$'))); ?><?php /**PATH /home/deliveryv/public_html/admin.deliveryv.com/resources/views/components/table/order-total.blade.php ENDPATH**/ ?>

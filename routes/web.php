@@ -260,10 +260,8 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
 
         //
         Route::get('profile', ProfileLivewire::class)->name('profile');
-        Route::get('dashboard', DashboardLivewire::class)->name('dashboard');
-        Route::get('', function () {
-            return redirect()->route('dashboard');
-        });
+        Route::get('/', DashboardLivewire::class)->name('dashboard');
+       
         Route::get('product/products', ProductLivewire::class)->name('products');
         Route::get('product/details/{id}', ProductDetailsLivewire::class)->name('product.details');
         Route::get('product/requests', ProductRequestLivewire::class)->name('products.requests');
@@ -346,7 +344,13 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
             Route::get('operations/imports', ImportLivewire::class)->name('imports');
             Route::get('operations/exports', ExportLivewire::class)->name('exports');
             Route::get('operations/backup', BackUpLivewire::class)->name('backups');
+            if (\App::environment('production')) {
                 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
+            } else {
+                Route::get('logs', function () {
+                    return abort(404); // Trigger the default 404 error handler
+                })->name('logs');
+            }
             Route::get('operations/data/clear', DataLivewire::class)->name('data.clear');
             // Route::get('jobs/monitor', '\romanzipp\QueueMonitor\Controllers\ShowQueueMonitorController')->name('job-monitor');
             Route::prefix('jobs')->group(function () {
@@ -553,8 +557,8 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
             ->middleware(['permission:view-driver-documents']);
 
         //favourites
-        Route::get('vendors/favourites', FavouriteVendorLivewire::class)->name('vendor.favourites')
-            ->middleware(['permission:view-favourites']);
+        // Route::get('vendors/favourites', FavouriteVendorLivewire::class)->name('vendor.favourites')
+        //     ->middleware(['permission:view-favourites']);
     });
 
 
