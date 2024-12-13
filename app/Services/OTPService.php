@@ -3,10 +3,9 @@
 namespace App\Services;
 
 use Aloha\Twilio\Twilio;
-use App\Mail\OTPMail;
 use Illuminate\Support\Facades\Http;
 use Craftsys\Msg91\Client;
-use Exception;
+
 
 class OTPService
 {
@@ -17,7 +16,7 @@ class OTPService
 
 
     //
-    public function sendOTP($phone, $message, $gateway = null, $user = null, $code = null): ?String
+    public function sendOTP($phone, $message, $gateway = null)
     {
         $isDemo = !\App::environment('production');
 
@@ -30,7 +29,6 @@ class OTPService
         $enabledSmsGateway = \Str::lower($enabledSmsGateway);
         if ($isDemo) {
             logger("SMS Sending", [$phone, $message, $gateway, $enabledSmsGateway]);
-            return __("OTP has been sent to your provided phone number and email address associated with the account");
         }
 
         //
@@ -93,10 +91,7 @@ class OTPService
 
             if ($isDemo) {
                 logger("msg91 sending sms", [
-                    $authKey,
-                    $sender,
-                    $routeNo,
-                    $templateId
+                    $authKey, $sender, $routeNo, $templateId
                 ]);
             }
 
@@ -109,7 +104,7 @@ class OTPService
             ]);
 
             $otp = $msg91Client->otp($varibale1);
-            $otp->to($phone)
+            $response = $otp->to($phone)
                 ->from($sender) // sender id
                 ->template($templateId) // template id for otps
                 ->options(function (\Craftsys\Msg91\OTP\Options $options) use ($varibale1, $templateMsg) {
@@ -117,8 +112,9 @@ class OTPService
                         ->otp($varibale1) // set the number of digits in generated otp
                         ->message($templateMsg) // custom template
                         ->expiresInMinutes(60); // set the expiry
-                });
-            $response = $otp->send();
+                })
+                ->send();
+
             if ($isDemo) {
                 logger("msg91Client Response ", [$messageParts, $varibale1, $response->getData()]);
             }
@@ -196,34 +192,16 @@ class OTPService
             $username = env("HUBTEL_AUTHKEY");
             $password = env("HUBTEL_TOKEN");
             $sender = env("HUBTEL_SENDER");
-            $phone = str_ireplace(" ", "", $phone);
-            $phone = str_ireplace("+", "", $phone);
-            $url = "https://smsc.hubtel.com/v1/messages/send?clientsecret=$password&clientid=$username&from=$sender&to=$phone&content=" . urlencode($message) . "";
-            // logger("hubtel url", [$url]);
-            $response = Http::get($url);
+
+            $response = Http::get(
+                "https://smsc.hubtel.com/v1/messages/send?clientsecret={" . $password . "}&clientid={" . $username . "}&from={" . $sender . "}&to=" . $phone . "&content=" . urlencode($message) . ""
+            );
 
             if (!$response->successful()) {
                 throw new \Exception($response->body(), 1);
             }
         }
         //custom code
-
-
-
-        //send to email too if possible
-        if ($user == null || $code == null) {
-            return null;
-        }
-        //send code via email
-        try {
-            MailHandlerService::sendMail(new OTPMail($code, $user), $user->email);
-            return __("OTP has been sent to your provided phone number and email address associated with the account");
-        } catch (\Exception $ex) {
-            logger("Mail Error: please check your mail server settings", [$ex]);
-        }
-
-        //return response
-        return null;
     }
 
 

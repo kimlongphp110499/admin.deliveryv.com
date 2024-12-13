@@ -57,12 +57,6 @@
             <x-input title="{{ __('Prescription Images') }} {{ __('File Size') }}" name="prescription_file_size_limit"
                 type="number" hint="{{ $kbHint }}" />
         </div>
-        {{-- document  --}}
-        <p class="mt-4 font-bold">{{ __('Document') }}</p>
-        <div class="grid grid-cols-1 gap-1 md:gap-4 md:grid-cols-2">
-            <x-input title="{{ __('Documents') }} {{ __('File Size') }}" name="document_limit" type="number"
-                hint="{{ $kbHint }}" />
-        </div>
         {{-- --}}
         <div class="my-4">
             <x-buttons.primary title="{{ __('Save Changes') }}" />

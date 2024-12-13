@@ -21,15 +21,13 @@ class TaxiOrderObserver
         AppLangService::tempLocale();
         //recalculate taxi order amount
         if (!empty(request()->status) && !empty($model->taxi_order) && in_array(request()->status, ["delivered", "completed", "success"])) {
-            $recalculate = (bool) setting('taxi.recalculateFare', false);
-            if ($recalculate) {
-                $newTaxiFare = $this->getRecalculatedTaxiOrderTotalPrice($model);
-                $model->sub_total = $newTaxiFare;
-                $model->total = ($newTaxiFare - $model->discount) + $model->tip;
-                //update the taxi order
-                $taxiOrder = $this->getRecalculatedTaxiOrderBreakdown($model);
-                $taxiOrder->saveQuietly();
-            }
+            //
+            $newTaxiFare = $this->getRecalculatedTaxiOrderTotalPrice($model);
+            $model->sub_total = $newTaxiFare;
+            $model->total = ($newTaxiFare - $model->discount) + $model->tip;
+            //update the taxi order
+            $taxiOrder = $this->getRecalculatedTaxiOrderBreakdown($model);
+            $taxiOrder->saveQuietly();
         }
         AppLangService::restoreLocale();
     }

@@ -51,10 +51,12 @@ class UserLivewire extends BaseLivewireComponent
 
     public function render()
     {
-        return view('livewire.users');
+        return view('livewire.users', [
+            "roles" => $this->getRoles(),
+        ]);
     }
 
-    public function getRolesProperty()
+    public function getRoles()
     {
         $user = User::find(\Auth::id());
         $roles = [];
@@ -83,7 +85,7 @@ class UserLivewire extends BaseLivewireComponent
     public function showCreateModal()
     {
         $this->reset();
-        $this->role = $this->roles[0]["name"];
+        $this->role = $this->getRoles()[0]["name"];
         $this->showCreate = true;
     }
 
@@ -105,7 +107,7 @@ class UserLivewire extends BaseLivewireComponent
             $user->password = Hash::make($this->password);
             $user->save();
             //client role if not set
-            $user->syncRoles($this->role ?? "client");
+            $user->assignRole($this->role ?? "client");
 
             //update wallet
             $user->updateWallet($this->walletBalance);
@@ -164,7 +166,7 @@ class UserLivewire extends BaseLivewireComponent
             $user->name = $this->name;
             $user->email = $this->email;
             $user->phone = $this->phone;
-            $user->commission = $this->commission;
+            $user->commission = $this->commission ?? 0.00;
             if (!empty($this->password)) {
                 $user->password = Hash::make($this->password);
             }

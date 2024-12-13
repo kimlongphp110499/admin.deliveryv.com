@@ -45,7 +45,7 @@
                                     </div>
                                     <div class="w-full">
                                         <p>{{ $mPackageType->name }}</p>
-                                        <p>{!! $mPackageType->description !!}</p>
+                                        <p>{{ $mPackageType->description }}</p>
                                     </div>
                                 </div>
                             @endforeach
@@ -153,7 +153,7 @@
                             {{-- list of selectable vendors --}}
                             @foreach ($vendors ?? [] as $vendor)
                                 @php
-
+                                    
                                     $selectedClass = '';
                                     $isSelected = false;
                                     if ($vendor != null && $vendor_id != null && $vendor_id == ($vendor['id'] ?? '')) {
@@ -170,7 +170,7 @@
                                         </div>
                                         <div class="w-full">
                                             <p class="font-bold">{{ $vendor['name'] }}</p>
-                                            <p class="text-sm">{!! $vendor['description'] !!}</p>
+                                            <p class="text-sm">{{ $vendor['description'] }}</p>
                                         </div>
                                     </div>
                                     {{-- show scheduling order is this vendor is selected --}}
@@ -283,7 +283,7 @@
                                     </div>
                                     <div class="w-full">
                                         <p class="font-semibold">{{ $packageType->name }}</p>
-                                        <p class="text-sm">{!! $packageType->description !!}</p>
+                                        <p class="text-sm">{{ $packageType->description }}</p>
                                     </div>
                                 </div>
 
@@ -298,7 +298,7 @@
                                         </div>
                                         <div class="w-full">
                                             <p class="font-semibold">{{ $selectedModel->name }}</p>
-                                            <p class="text-sm">{!! $selectedModel->description !!}</p>
+                                            <p class="text-sm">{{ $selectedModel->description }}</p>
                                         </div>
                                     </div>
                                     {{-- if schedule_enable is true, show schedule time and date --}}
@@ -441,14 +441,6 @@
                                 <x-details.amount title="{{ __('Tax') }}({{ $selectedModel->tax ?? 0 }}%)"
                                     amount="{{ currencyFormat($tax) }}" />
                                 <hr />
-                                {{-- fees --}}
-                                <div class="{{ empty($fees) || $fees == null ? 'hidden' : 'block' }}">
-                                    @foreach ($fees ?? [] as $fee)
-                                        <x-details.amount title="{{ $fee['name'] ?? __('Fee') }}"
-                                            amount="{{ currencyFormat($fee['amount'] ?? 0.0) }}" />
-                                        <hr />
-                                    @endforeach
-                                </div>
                                 <x-details.amount title="{{ __('Total') }}"
                                     amount="{{ currencyFormat($total) }}" />
                             </div>

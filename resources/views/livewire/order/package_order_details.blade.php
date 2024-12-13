@@ -63,10 +63,7 @@
         text="{{ $selectedModel != null ? $selectedModel->updated_at->format('M d, Y \\a\\t H:i a') : '' }}" />
     @if ($selectedModel != null && $selectedModel->status == 'scheduled')
         @php
-            $scheduleDate = \Carbon\Carbon::createFromFormat(
-                'Y-m-d H:i:s',
-                $selectedModel->pickup_date . ' ' . $selectedModel->pickup_time,
-            );
+            $scheduleDate = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $selectedModel->pickup_date . ' ' . $selectedModel->pickup_time);
         @endphp
         <x-details.item title="{{ __('Scheduled For') }}" text="{{ $scheduleDate->format('M d, Y \\a\\t h:i a') }}" />
     @endif
@@ -118,17 +115,6 @@
         </p>
         <x-details.p text="{{ currencyFormat($selectedModel->tip ?? '0.00') }}" />
     </div>
-
-    {{--  order fees  --}}
-    <x-order.fees :order="$selectedModel" />
-
-    <div class="flex items-center justify-end space-x-20 border-b">
-        <x-label title="{{ __('Delivery Fee') }}" />
-        <div class="w-6/12 md:w-4/12 lg:w-2/12">
-            <x-details.p text="+{{ currencyFormat($selectedModel->delivery_fee ?? '') }}" />
-        </div>
-    </div>
-    <hr class="my-2" />
     <div class="flex items-center justify-end space-x-20 border-b">
         <x-label title="{{ __('Subtotal') }}" />
         <div class="w-6/12 md:w-4/12 lg:w-2/12">
@@ -141,14 +127,20 @@
             <x-details.p text="-{{ currencyFormat($selectedModel->discount ?? '') }}" />
         </div>
     </div>
-
+    <div class="flex items-center justify-end space-x-20 border-b">
+        <x-label title="{{ __('Delivery Fee') }}" />
+        <div class="w-6/12 md:w-4/12 lg:w-2/12">
+            <x-details.p text="+{{ currencyFormat($selectedModel->delivery_fee ?? '') }}" />
+        </div>
+    </div>
     <div class="flex items-center justify-end space-x-20 border-b">
         <x-label title="{{ __('Tax') }}" />
         <div class="w-6/12 md:w-4/12 lg:w-2/12">
             <x-details.p text="+{{ currencyFormat($selectedModel->tax ?? '') }}" />
         </div>
     </div>
-    <hr class="my-2" />
+    {{--  order fees  --}}
+    <x-order.fees :order="$selectedModel" />
     <div class="flex items-center justify-end space-x-20 border-b">
         <x-label title="{{ __('Total') }}" />
         <div class="w-6/12 md:w-4/12 lg:w-2/12">

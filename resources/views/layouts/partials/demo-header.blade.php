@@ -1,8 +1,6 @@
 <div class="bg-white shadow-sm mb-4">
     @php
-        // $showBuyNowBanner = env('APP_ENV') != 'production' || request()->getHost() === 'fuodz.edentech.online';
-        $host = request()->getHost();
-        $showBuyNowBanner = $host === 'fuodz.edentech.online' || $host === 'glover.edentech.online';
+        $showBuyNowBanner = env('APP_ENV') != 'production' || request()->getHost() === 'fuodz.edentech.online';
     @endphp
     @if ($showBuyNowBanner)
         <div class="block md:flex items-center justify-center text-center space-x-4 py-2 text-sm md:text-base">

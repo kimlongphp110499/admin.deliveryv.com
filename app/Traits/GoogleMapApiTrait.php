@@ -145,15 +145,14 @@ trait GoogleMapApiTrait
             $polygon = $points->map(function ($point) {
                 return "{$point->lat} {$point->lng}";
             })->toArray();
-            // $firstPoint = $points->first();
-            // array_push($polygon, "{$firstPoint->lat} {$firstPoint->lng}");
+            $firstPoint = $points->first();
+            array_push($polygon, "{$firstPoint->lat} {$firstPoint->lng}");
             //
             $result = $polygonPointLocationService->pointInPolygon($point, $polygon);
             if ($result != null && $result == "inside") {
                 $canDeliver = true;
             } else {
-                //double checking
-                $canDeliver = $polygonPointLocationService->isPointInPolygon($cLatLng, $points);
+                $canDeliver = false;
             }
         } catch (\Exception $ex) {
             logger("error with new bound check", [$ex]);

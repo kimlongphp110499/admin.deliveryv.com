@@ -60,7 +60,7 @@
                                             min="1" />
                                     </td>
                                     <td class="{{ $cellClasses }}">
-                                        {{ currencyFormat($product['total_price'] ?? ($product['price'] ?? '0')) }}
+                                        {{ currencyFormat($product['price'] ?? '0') }}
                                     </td>
                                     <td class="{{ $cellClasses }} flex items-center justify-center">
                                         <x-buttons.plain bgColor="bg-red-500"
@@ -275,18 +275,6 @@
                         <x-details.p text="+ {{ currencyFormat($newOrder->tip ?? '0') }}" />
                     </div>
                 </div>
-                {{-- fees --}}
-                {{-- @foreach ($newOrder->fees ?? [] as $fee)
-                    <div class="flex items-center justify-end space-x-20 border-b">
-                        <x-label title="{{ __('Driver Tip') }}" />
-                        <div class="w-6/12 md:w-4/12 lg:w-2/12">
-                            <x-details.p text="+ {{ currencyFormat($newOrder->tip ?? '0') }}" />
-                        </div>
-                    </div>
-                @endforeach --}}
-                @if ($newOrder != null)
-                    <x-order.fees :order="$newOrder" />
-                @endif
                 <div class="flex items-center justify-end space-x-20 border-b">
                     <x-label title="{{ __('Total') }}" />
                     <div class="w-6/12 md:w-4/12 lg:w-2/12">

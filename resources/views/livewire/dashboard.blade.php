@@ -7,23 +7,23 @@
         <div class="grid gap-6 mt-10 md:grid-cols-2 lg:grid-cols-4">
 
             {{-- Orders --}}
-            <x-dashboard-card bg="bg-primary-100" title="{{ __('TOTAL ORDERS') }}" value="{{ $this->totalOrders }}">
+            <x-dashboard-card bg="bg-primary-100" title="{{ __('TOTAL ORDERS') }}" value="{{ $totalOrders }}">
                 <x-heroicon-s-shopping-bag class="w-16 text-primary-600" />
             </x-dashboard-card>
 
             {{-- Earning --}}
             <x-dashboard-card bg="bg-blue-100" title="{{ __('TOTAL EARNINGS') }}"
-                value="{{ setting('currency') }} {{ $this->totalEarnings }}">
+                value="{{ setting('currency') }} {{ $totalEarnings }}">
                 <x-heroicon-s-cash class="w-16 text-primary-600" />
             </x-dashboard-card>
             @role('admin')
                 {{-- Total Vendors --}}
-                <x-dashboard-card bg="bg-red-100" title="{{ __('TOTAL VENDORS') }}" value="{{ $this->totalVendors }}">
+                <x-dashboard-card bg="bg-red-100" title="{{ __('TOTAL VENDORS') }}" value="{{ $totalVendors }}">
                     <x-heroicon-s-cake class="w-16 text-primary-600" />
                 </x-dashboard-card>
 
                 {{-- Users --}}
-                <x-dashboard-card bg="bg-yellow-100" title="{{ __('TOTAL Clients') }}" value="{{ $this->totalClients }}">
+                <x-dashboard-card bg="bg-yellow-100" title="{{ __('TOTAL Clients') }}" value="{{ $totalClients }}">
                     <x-heroicon-s-users class="w-16 text-primary-600" />
                 </x-dashboard-card>
             @endrole
@@ -34,13 +34,13 @@
 
             {{-- Orders --}}
             <x-dashboard-chart>
-                <livewire:livewire-column-chart :column-chart-model="$this->ordersChart" />
+                <livewire:livewire-column-chart :column-chart-model="$ordersChart" />
             </x-dashboard-chart>
 
             @role('admin')
                 {{-- Users --}}
                 <x-dashboard-chart>
-                    <livewire:livewire-column-chart :column-chart-model="$this->usersChart" />
+                    <livewire:livewire-column-chart :column-chart-model="$usersChart" />
                 </x-dashboard-chart>
             @endrole
         </div>
@@ -48,16 +48,16 @@
         <div class="mt-10 grid grid-cols-1 lg:grid-cols-2 gap-4">
 
             <x-dashboard-chart>
-                <livewire:livewire-column-chart :column-chart-model="$this->topSaleDaysChart" />
+                <livewire:livewire-column-chart :column-chart-model="$topSaleDaysChart" />
             </x-dashboard-chart>
 
             <x-dashboard-chart>
-                <livewire:livewire-column-chart :column-chart-model="$this->topSaleTimingChart" />
+                <livewire:livewire-column-chart :column-chart-model="$topSaleTimingChart" />
             </x-dashboard-chart>
 
             @role('admin')
                 <x-dashboard-chart>
-                    <livewire:livewire-column-chart :column-chart-model="$this->userRolesChart" />
+                    <livewire:livewire-column-chart :column-chart-model="$userRolesChart" />
                 </x-dashboard-chart>
             @endrole
         </div>

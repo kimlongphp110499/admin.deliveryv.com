@@ -4,14 +4,11 @@ namespace App\Console\Commands;
 
 use App\Models\Category;
 use App\Models\Subcategory;
-use App\Traits\ImageGeneratorTrait;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
 class DevPopulateCategory extends Command
 {
-
-    use ImageGeneratorTrait;
     /**
      * The name and signature of the console command.
      *
@@ -55,13 +52,12 @@ class DevPopulateCategory extends Command
             return 0;
         }
 
-        //generate data to test
+        //generate data to test 
         $categories = Category::get();
         foreach ($categories as $category) {
 
             try {
-                $url = $this->generateImage($category->name, "category,logo");
-                $category->addMediaFromUrl($url)
+                $category->addMediaFromUrl("https://source.unsplash.com/420x240/?vendor,{$category->name}")
                     ->toMediaCollection();
             } catch (\Exception $ex) {
                 logger("unsplash Error", [$ex->getMessage()]);
@@ -72,8 +68,7 @@ class DevPopulateCategory extends Command
         foreach ($categories as $category) {
 
             try {
-                $url = $this->generateImage($category->name, "category,subcategory,logo");
-                $category->addMediaFromUrl($url)
+                $category->addMediaFromUrl("https://source.unsplash.com/420x240/?vendor,{$category->name}")
                     ->toMediaCollection();
             } catch (\Exception $ex) {
                 logger("unsplash Error", [$ex->getMessage()]);

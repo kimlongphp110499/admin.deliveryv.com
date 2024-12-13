@@ -63,7 +63,7 @@ class SystemDriverLivewire extends BaseLivewireComponent
             $user->commission = $this->commission;
             $user->password = Hash::make($this->password);
             $user->save();
-            $user->syncRoles("driver");
+            $user->assignRole("driver");
             //update wallet
             $user->updateWallet(0);
 

@@ -21,8 +21,6 @@ use App\Traits\TaxiTrait;
 use App\Traits\OrderTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
 
 
 class TaxiOrderController extends Controller
@@ -37,29 +35,11 @@ class TaxiOrderController extends Controller
 
         $latitude = $request->latitude;
         $longitude = $request->longitude;
-        $cLatLng = [
-            'lat' => $latitude,
-            'lng' => $longitude
-        ];
 
-        //if no zone created
-        if (TaxiZone::get()->count() == 0) {
-            return response()->json([
-                "message" => __("Service location"),
-            ], 200);
-        }
-        //find the delivery zone that provided delivery address is within
-        $taxiZones = TaxiZone::active()->get();
-        $isAvailable = true;
-        foreach ($taxiZones as $deliveryZone) {
-            $inBound = $this->insideBound($cLatLng, $deliveryZone->points);
-            if ($inBound) {
-                $isAvailable = true;
-                break;
-            }
-        }
+        $taxiZonesCount = TaxiZone::count();
+        $taxiZone = TaxiZone::closeTo($latitude, $longitude)->first();
 
-        if ($isAvailable) {
+        if ($taxiZonesCount == 0 ||  !empty($taxiZone)) {
             return response()->json([
                 "message" => __("Service location"),
             ], 200);
@@ -75,7 +55,7 @@ class TaxiOrderController extends Controller
     {
 
         $taxiOrders = TaxiOrder::whereHas('order', function ($q) {
-            $q->where('user_id', Auth::id());
+            $q->where('user_id', \Auth::id());
         })
             ->groupBy('dropoff_address')
             ->latest()->limit(10)->get();
@@ -128,10 +108,10 @@ class TaxiOrderController extends Controller
             $order = new order();
             $order->code = $this->generateOrderCode(10);
             //add user_id if the request has user_id and the auth user has 'new-taxi-order' permission
-            if ($request->has('user_id') && Auth::user()->can('new-taxi-order')) {
+            if ($request->has('user_id') && \Auth::user()->can('new-taxi-order')) {
                 $order->user_id = $request->user_id;
             } else {
-                $order->user_id = Auth::id();
+                $order->user_id = \Auth::id();
             }
             //verify payment method is valid and can handle the order amount
             $paymentMethod = PaymentMethod::find($request->payment_method_id);
@@ -144,7 +124,7 @@ class TaxiOrderController extends Controller
                 if ($paymentMethod->slug == "wallet") {
                     //
                     $wallet = Wallet::firstOrCreate(
-                        ['user_id' => $request->user_id ?? Auth::id()],
+                        ['user_id' => $request->user_id ?? \Auth::id()],
                         ['balance' => 0.00]
                     );
 
@@ -178,7 +158,7 @@ class TaxiOrderController extends Controller
             $order->pickup_date = $request->pickup_date;
             $order->pickup_time = $request->pickup_time;
             $order->payment_status ??= "pending";
-            if (Schema::hasColumn("orders", 'fees')) {
+            if (\Schema::hasColumn("orders", 'fees')) {
                 $order->fees = json_encode($request->fees ?? []);
             }
             $order->save();
@@ -189,7 +169,7 @@ class TaxiOrderController extends Controller
             if (!empty($coupon)) {
                 $couponUser = new CouponUser();
                 $couponUser->coupon_id = $coupon->id;
-                $couponUser->user_id = $request->user_id ?? Auth::id();
+                $couponUser->user_id = $request->user_id ?? \Auth::id();
                 $couponUser->order_id = $order->id;
                 $couponUser->save();
             }
@@ -249,26 +229,17 @@ class TaxiOrderController extends Controller
     //
     public function current(Request $request)
     {
-        $authUser = User::find(Auth::id());
+
+        //
+        $authUser = User::find(\Auth::id());
+        //
         $taxiBookingOrder = Order::with('driver.vehicle')->otherCurrentStatus(['failed', 'cancelled', 'delivered', 'scheduled'])
             ->whereHas('taxi_order')
             ->when($authUser->hasRole("driver"), function ($q) {
-                return $q->where('driver_id', Auth::id());
+                return $q->where('driver_id', \Auth::id());
             }, function ($q) {
-                return $q->where('user_id', Auth::id());
+                return $q->where('user_id', \Auth::id());
             })
-            ->first();
-        return response()->json([
-            "order" => $taxiBookingOrder,
-        ], 200);
-    }
-
-    public function currentRateable(Request $request)
-    {
-        $taxiBookingOrder = Order::with('driver.vehicle')->currentStatus(['delivered', 'success', 'successful'])
-            ->whereHas('taxi_order')
-            ->whereDoesntHave('reviews')
-            ->where('user_id', Auth::id())
             ->first();
         return response()->json([
             "order" => $taxiBookingOrder,

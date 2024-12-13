@@ -245,8 +245,8 @@ class NewPackageOrderLivewire extends BaseLivewireComponent
                 $locations[] = [
                     "address" => $mDeliveryAddress->address,
                     "name" => $mDeliveryAddress->name,
-                    "lat" => $mDeliveryAddress->lat ?? $mDeliveryAddress->latitude,
-                    "long" => $mDeliveryAddress->long ?? $mDeliveryAddress->longitude,
+                    "lat" => $mDeliveryAddress->lat,
+                    "long" => $mDeliveryAddress->long,
                     "city" => $mDeliveryAddress->city,
                     "state" => $mDeliveryAddress->state,
                     "country" => $mDeliveryAddress->country,
@@ -254,8 +254,8 @@ class NewPackageOrderLivewire extends BaseLivewireComponent
 
                 //
                 $this->orderStops[$key]['address'] = $mDeliveryAddress->address;
-                $this->orderStops[$key]['latitude'] = $mDeliveryAddress->lat ?? $mDeliveryAddress->latitude;
-                $this->orderStops[$key]['longitude'] = $mDeliveryAddress->long ?? $mDeliveryAddress->longitude;
+                $this->orderStops[$key]['latitude'] = $mDeliveryAddress->lat;
+                $this->orderStops[$key]['longitude'] = $mDeliveryAddress->long;
                 $this->orderStops[$key]['name'] = $mDeliveryAddress->name;
             }
         }
@@ -576,7 +576,6 @@ class NewPackageOrderLivewire extends BaseLivewireComponent
                 "payer" => $this->payer == "sender" ? true : false,
                 "fees" => $this->fees,
                 "total" => $this->total,
-                "user_id" => $this->user_id,
             ];
             $request = new \Illuminate\Http\Request();
             $request->merge($payload);

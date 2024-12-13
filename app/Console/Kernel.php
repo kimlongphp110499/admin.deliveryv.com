@@ -48,10 +48,6 @@ class Kernel extends ConsoleKernel
 
         //clear logs on monday, Wednesdays, Saturday at 6am
         $schedule->command('logs:clear')->weekly()->days([1, 3, 6])->at('6:00');
-
-        $schedule->command('storage:backup')->dailyAt('02:00')->timezone('Asia/Ho_Chi_Minh');
-        $schedule->command('backup:clean')->dailyAt('01:00')->timezone('Asia/Ho_Chi_Minh');
-        $schedule->command('backup:run --only-db')->dailyAt('01:30')->timezone('Asia/Ho_Chi_Minh');
         //
         setting([
             "cronJobLastRun" => \Carbon\Carbon::now()->translatedFormat("d M Y \\a\\t h:i:s a"),

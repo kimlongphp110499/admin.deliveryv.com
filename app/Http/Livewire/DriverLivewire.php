@@ -52,11 +52,11 @@ class DriverLivewire extends BaseLivewireComponent
             $user->name = $this->name;
             $user->email = $this->email;
             $user->phone = $this->phone;
-            $user->commission = $this->commission;
+            $user->commission = $this->commission ?? 0.00;
             $user->password = Hash::make($this->password);
             $user->vendor_id = \Auth::user()->vendor_id;
             $user->save();
-            $user->syncRoles('driver');
+            $user->assignRole('driver');
 
             //update wallet
             $user->updateWallet(0);

@@ -36,40 +36,14 @@ class Vendor extends BaseModel
         'is_open' => 'boolean',
     ];
     protected $appends = [
-        'formatted_date',
-        'logo',
-        'feature_image',
-        'rating',
-        'can_rate',
-        'slots',
-        'is_package_vendor',
-        'is_favourite',
-        'has_subscription',
-        'document_requested',
-        'pending_document_approval'
+        'formatted_date', 'logo', 'feature_image', 'rating', 'can_rate', 'slots', 'is_package_vendor', 'has_subscription',
+        'document_requested', 'pending_document_approval'
     ];
     protected $with = ['vendor_type', 'fees'];
     protected $withCount = ['reviews'];
 
     protected $fillable = [
-        "id",
-        "name",
-        "description",
-        "delivery_fee",
-        "delivery_range",
-        "tax",
-        "phone",
-        "email",
-        "address",
-        "latitude",
-        "longitude",
-        "commission",
-        "pickup",
-        "delivery",
-        "is_active",
-        "charge_per_km",
-        "is_open",
-        "vendor_type_id"
+        "id", "name", "description", "delivery_fee", "delivery_range", "tax", "phone", "email", "address", "latitude", "longitude", "commission", "pickup", "delivery", "is_active", "charge_per_km", "is_open", "vendor_type_id"
     ];
 
 
@@ -145,12 +119,9 @@ class Vendor extends BaseModel
 
     public function scopeWithIn($query, $latitude, $longitude)
     {
-
-        return $query->byDeliveryZone($latitude, $longitude);
-
-        // return $query->whereHas('delivery_zones', function ($query) use ($latitude, $longitude) {
-        //     $query->closeTo($latitude, $longitude);
-        // });
+        return $query->whereHas('delivery_zones', function ($query) use ($latitude, $longitude) {
+            $query->closeTo($latitude, $longitude);
+        });
     }
 
 
@@ -272,16 +243,6 @@ class Vendor extends BaseModel
         return $photos;
     }
 
-    public function getIsFavouriteAttribute()
-    {
-
-        if (auth('sanctum')->user()) {
-            return $this->favourite ? true : false;
-        } else {
-            return false;
-        }
-    }
-
 
 
     //RELATIONSHIPS
@@ -298,11 +259,6 @@ class Vendor extends BaseModel
     public function managers()
     {
         return $this->hasMany('App\Models\User', 'vendor_id', 'id');
-    }
-
-    public function favourite()
-    {
-        return $this->belongsTo('App\Models\Favourite', 'id', 'vendor_id')->where("user_id", "=", auth('sanctum')->user()->id ?? 0);
     }
 
     //START SALES

@@ -25,9 +25,7 @@ class VendorCityTable extends BaseDataTableComponent
             Column::make(__('State'), "city.state.name")->searchable(),
             Column::make(__('Country'), "city.state.country.name")->searchable(),
             $this->activeColumn(),
-            $this->customActionsColumn(
-                false
-            ),
+            $this->actionsColumn('components.buttons.edit'),
         ];
     }
 }

@@ -22,11 +22,8 @@ class VendorStateTable extends BaseDataTableComponent
         return [
             Column::make(__('ID'), "id")->sortable(),
             Column::make(__('Name'), 'state.name')->searchable()->sortable(),
-            Column::make(__('Country'), "state.country.name")->searchable(),
-            $this->activeColumn(),
-            $this->customActionsColumn(
-                false
-            ),
+            Column::make(__('Country'), "state.country.name")->searchable(), $this->activeColumn(),
+            $this->actionsColumn('components.buttons.edit'),
         ];
     }
 }

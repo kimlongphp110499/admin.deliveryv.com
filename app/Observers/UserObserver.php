@@ -42,33 +42,15 @@ class UserObserver
         }
     }
 
-    public function updating(User $user)
-    {
-        $isAdmin = false;
-        if (\Auth::user() != null) {
-            $isAdmin = \Auth::user()->hasAnyRole('admin') ?? false;
-        }
-        //check if profile update is disabled
-        if ((bool) setting('enableProfileUpdate', 1) == false && !$isAdmin) {
-            $preventColumns = ["name", "email", "phone", "country_code"];
-            $dirty = $user->getDirty();
-            foreach ($dirty as $key => $value) {
-                if (in_array($key, $preventColumns)) {
-                    $msg = __("Profile update is disabled");
-                    $msg .= ":: $key";
-                    throw new \Exception($msg);
-                }
-            }
-        }
-    }
-
     public function updated(User $user)
     {
         //set vehicle type id, if any to firebase
         $this->updateDriverVehicleType($user);
     }
 
-    public function deleting(User $model) {}
+    public function deleting(User $model)
+    {
+    }
 
 
 

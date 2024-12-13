@@ -33,7 +33,7 @@
                 fileTypes="image/*" emitFunction="photoSelected" max="{{ setting('filelimit.max_service_images', 3) }}"
                 maxSize="{{ setting('filelimit.service_image_size', 200) }}" />
 
-            <x-select title="{{ __('Duration Type') }}" :options="$this->durationTypes" name="duration" :defer="false" />
+            <x-select title="{{ __('Duration Type') }}" :options="$durationTypes" name="duration" :defer="false" />
 
             <div class="grid grid-cols-2 space-x-2">
                 <x-input title="{{ __('Price') }}" name="price" />
@@ -82,7 +82,7 @@
                 fileTypes="image/*" emitFunction="photoSelected" max="{{ setting('filelimit.max_service_images', 3) }}"
                 maxSize="{{ setting('filelimit.service_image_size', 200) }}" />
 
-            <x-select title="{{ __('Duration Type') }}" :options="$this->durationTypes" name="duration" :defer="false" />
+            <x-select title="{{ __('Duration Type') }}" :options="$durationTypes" name="duration" :defer="false" />
             <div class="grid grid-cols-2 space-x-2">
                 <x-input title="{{ __('Price') }}" name="price" />
                 <x-input title="{{ __('Discount Price') }}" name="discount_price" />

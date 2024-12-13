@@ -35,17 +35,11 @@ class LoginLivewire extends BaseLivewireComponent
 
     public function login()
     {
-        //for bct
-        $bctUser = env('BO_CONG_THUONG_ACCOUNT_USER', '');
 
-        $emailValidationRules = 'required';
-        if ($this->email !== $bctUser) {
-            $emailValidationRules .= '|email|exists:users';
-        }
 
         $this->validate(
             [
-                "email" => $emailValidationRules,
+                "email" => "required|email|exists:users",
                 "password" => "required|string",
             ],
             [

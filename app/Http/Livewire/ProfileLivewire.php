@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\Meeting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Hash;
 class ProfileLivewire extends BaseLivewireComponent
 {
 
-    public $model = User::class;
+    public $model = Meeting::class;
 
     //
     public $name;
@@ -22,61 +23,61 @@ class ProfileLivewire extends BaseLivewireComponent
     public $new_password;
     public $new_password_confirmation;
 
-    public function mount()
+    public function render()
     {
-        $user = Auth::user();
+
+        $user = User::find( Auth::id() );
         $this->name = $user->name;
         $this->email = $user->email;
         $this->phone = $user->phone;
-    }
 
-    public function render()
-    {
         return view('livewire.profile');
     }
 
 
     // Update profile
-    public function updateProfile()
-    {
+    public function updateProfile(){
         //validate
         $this->validate(
             [
                 "name" => "required|string",
-                "email" => "required|email|unique:users,email," . Auth::id() . "",
-                'phone' => 'phone:' . setting('countryCode', "GH") . '|unique:users,phone,' . Auth::id(),
+                "email" => "required|email|unique:users,email,".Auth::id()."",
+                'phone' => 'phone:' . setting('countryCode', "GH") . '|unique:users,phone,'.Auth::id(),
             ]
         );
 
-        try {
+        try{
 
             DB::beginTransaction();
-            $user = User::find(Auth::id());
+            $user = User::find( Auth::id() );
             $user->name = $this->name;
             $user->email = $this->email;
             $user->phone = $this->phone;
             $user->save();
 
-            if ($this->photo) {
+            if( $this->photo ){
 
                 $user->clearMediaCollection("profile");
-                $user->addMedia($this->photo->getRealPath())->toMediaCollection("profile");
+                $user->addMedia( $this->photo->getRealPath() )->toMediaCollection("profile");
                 $this->photo = null;
+
             }
 
             DB::commit();
-            $this->showSuccessAlert(__("Profile") . " " . __('updated successfully!'));
-        } catch (Exception $error) {
+            $this->showSuccessAlert(__("Profile")." ".__('updated successfully!'));
+
+        }catch(Exception $error){
 
             DB::rollback();
-            $this->showErrorAlert($error->getMessage() ?? __("Profile") . " " . __('updated failed!'));
+            $this->showErrorAlert( $error->getMessage() ?? __("Profile")." ".__('updated failed!'));
+
         }
+
     }
 
 
     // Change Password
-    public function changePassword()
-    {
+    public function changePassword(){
         //validate
         $this->validate(
             [
@@ -85,21 +86,26 @@ class ProfileLivewire extends BaseLivewireComponent
             ]
         );
 
-        try {
+        try{
 
-            if (!Hash::check($this->current_password, Auth::user()->password)) {
+            if( !Hash::check( $this->current_password , Auth::user()->password ) ){
                 throw new Exception("Currenct Password is incorrect");
             }
 
-            $user = User::find(Auth::id());
-            $user->password = Hash::make($this->new_password);
+            $user = User::find( Auth::id() );
+            $user->password = Hash::make($this->new_password );
             $user->save();
             $this->reset();
-            $this->showSuccessAlert(__("Password") . " " . __('updated successfully!'));
-        } catch (Exception $error) {
+            $this->showSuccessAlert(__("Password")." ".__('updated successfully!'));
+
+        }catch(Exception $error){
 
             DB::rollback();
-            $this->showErrorAlert($error->getMessage() ?? __("Password") . " " . __('updated failed!'));
+            $this->showErrorAlert( $error->getMessage() ?? __("Password")." ".__('updated failed!'));
+
         }
+
     }
+
+
 }

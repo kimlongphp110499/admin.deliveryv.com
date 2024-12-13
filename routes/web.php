@@ -176,11 +176,6 @@ use App\Http\Livewire\ReportLivewire;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::domain('baocao.deliveryv.com')->group(function () {
-    Route::get('/gov', function () {
-        return 'Báo cáo dành cho chính phủ';
-    });
-});
 Route::get('/analytics', [GoogleAnalyticsController::class, 'index'])->name('analytics.index');
 
 Route::group(['middleware' => ['web', 'check_ct_account']], function () {
@@ -351,13 +346,7 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
             Route::get('operations/imports', ImportLivewire::class)->name('imports');
             Route::get('operations/exports', ExportLivewire::class)->name('exports');
             Route::get('operations/backup', BackUpLivewire::class)->name('backups');
-            if (\App::environment('production')) {
                 Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
-            } else {
-                Route::get('logs', function () {
-                    return abort(404); // Trigger the default 404 error handler
-                })->name('logs');
-            }
             Route::get('operations/data/clear', DataLivewire::class)->name('data.clear');
             // Route::get('jobs/monitor', '\romanzipp\QueueMonitor\Controllers\ShowQueueMonitorController')->name('job-monitor');
             Route::prefix('jobs')->group(function () {

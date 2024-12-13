@@ -338,10 +338,7 @@ class RegularOrderController extends Controller
         }
 
         //calculate tax
-        $vendorTax = $vendor->tax;
-        $vendorTax ??= setting('finance.generalTax', 0);
-        $tax = (floatval($vendorTax) / 100) * floatval($subtotal);
-        $tax_rate = ($tax / floatval($subtotal)) * 100;
+        $tax = ($vendor->tax / 100) * $subtotal;
 
         //calculate fees
         $fees = $vendor->fees ?? [];
@@ -377,7 +374,6 @@ class RegularOrderController extends Controller
             "subtotal" => $subtotal,
             "discount" => $discount,
             "tax" => $tax,
-            "tax_rate" => $tax_rate,
             "total" => $total,
             "total_with_tip" => $totalWithTip,
             'tip' => $request->tip ?? 0,
@@ -524,10 +520,7 @@ class RegularOrderController extends Controller
         }
 
         //calculate tax
-        $vendorTax = $vendor->tax;
-        $vendorTax ??= setting('finance.generalTax', 0);
-        $tax = (floatval($vendorTax) / 100) * floatval($subtotal);
-        $tax_rate = ($tax / floatval($subtotal)) * 100;
+        $tax = ($vendor->tax / 100) * $subtotal;
 
         //calculate fees
         $fees = $vendor->fees ?? [];
@@ -562,7 +555,6 @@ class RegularOrderController extends Controller
             "discount" => $discount,
             "delivery_fee" => $deliveryFee,
             "tax" => $tax,
-            "tax_rate" => $tax_rate,
             "total" => $total,
             "total_with_tip" => $totalWithTip,
             'tip' => $request->tip ?? 0,

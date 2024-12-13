@@ -25,16 +25,11 @@ class TaxiZone extends Model
         return $query->where('is_active', '=', 1);
     }
 
-    public function getFormattedDateAttribute()
-    {
-        return $this->created_at != null ? $this->created_at->translatedFormat('d M Y') : '';
-    }
-
     public function scopeCloseTo($query, $latitude, $longitude)
     {
         return $query
-            ->selectRaw('radius AS deliveryZoneRange')
-            ->distance($latitude, $longitude)
+        ->selectRaw('radius AS deliveryZoneRange')
+        ->distance($latitude, $longitude)
             ->havingRaw("deliveryZoneRange >= distance")->orderBy('distance', 'ASC');
     }
 }

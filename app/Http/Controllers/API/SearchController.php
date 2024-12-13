@@ -12,13 +12,6 @@ use App\Traits\GoogleMapApiTrait;
 class SearchController extends Controller
 {
     use GoogleMapApiTrait;
-
-    protected $productsPerPage;
-
-    public function __construct(Request $request)
-    {
-        $this->productsPerPage = 15;
-    }
     //
     public function index(Request $request)
     {
@@ -124,10 +117,22 @@ class SearchController extends Controller
                     });
                 })
                 //filter by vendor location
-                ->when(fetchDataByLocation() && $request->latitude, function ($query) use ($request) {
-                    return $query->byDeliveryZone($request->latitude, $request->longitude);
+                ->when($request->latitude, function ($query) use ($request) {
+                    if (!fetchDataByLocation()) {
+                        return $query;
+                    }
+                    //
+                    $latitude = $request->latitude;
+                    $longitude = $request->longitude;
+                    $deliveryZonesIds = $this->getDeliveryZonesByLocation($latitude, $longitude);
+                    //where has vendors that has delivery zones
+                    return $query->whereHas("vendor", function ($query) use ($deliveryZonesIds) {
+                        $query->whereHas('delivery_zones', function ($query) use ($deliveryZonesIds) {
+                            $query->whereIn('delivery_zone_id', $deliveryZonesIds);
+                        });
+                    });
                 })
-                ->paginate($this->productsPerPage);
+                ->paginate();
 
 
 
@@ -177,7 +182,7 @@ class SearchController extends Controller
                         });
                     });
                 })
-                ->paginate($this->productsPerPage);
+                ->paginate();
         } else {
             //
             $latitude = $request->latitude;
@@ -212,10 +217,11 @@ class SearchController extends Controller
                 })
                 ->when($request->latitude, function ($query) use ($request) {
                     return $query->where(function ($query) use ($request) {
-                        return $query->within($request->latitude, $request->longitude)
-                            ->orwhere(function ($query) use ($request) {
-                                return $query->withinrange($request->latitude, $request->longitude);
-                            });
+                        return $query->where(function ($query) use ($request) {
+                            return $query->within($request->latitude, $request->longitude);
+                        })->orwhere(function ($query) use ($request) {
+                            return $query->withinrange($request->latitude, $request->longitude);
+                        });
                     });
                 })
                 ->orderBy('is_open', 'desc')

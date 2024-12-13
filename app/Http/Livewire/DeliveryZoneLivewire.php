@@ -52,16 +52,6 @@ class DeliveryZoneLivewire extends BaseLivewireComponent
     }
 
 
-    public function showCreateModal()
-    {
-        try {
-            $this->isDemo();
-            parent::showCreateModal();
-        } catch (\Exception $error) {
-            $this->showErrorAlert($error->getMessage() ?? "Failed");
-        }
-    }
-
     //
     function save()
     {

@@ -181,46 +181,6 @@ class Product extends BaseModel
         return ($this->discount_price != null && $this->discount_price > 0) ? $this->discount_price : $this->price;
     }
 
-    public function getPhotoAttribute()
-    {
-        $mediaJson = $this->getMedia() ?? null;
-
-        if (!$mediaJson) {
-            return asset('images/default.png');
-        }
-
-        $mediaArray = json_decode($mediaJson, true);
-        if (!isset($mediaJson[0]['original_url'])) {
-            return asset('images/default.png');
-        }
-    
-        $originalUrl = $mediaArray[0]['original_url'];
-    
-        $isAccessible = \Cache::remember("photo_accessible_" . md5($originalUrl), 3600, function () use ($originalUrl) {
-            return $this->isUrlAccessible($originalUrl);
-        });
-
-        if ($isAccessible) {
-            return $originalUrl;
-        }
-    
-        return asset('images/default.png');
-    }
-
-    public function isUrlAccessible(string $url): bool
-    {
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_NOBODY, true);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 5);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-    
-        return $httpCode === 200;
-    }
-
     public function getPhotosAttribute()
     {
         $mediaItems = $this->getMedia('default');

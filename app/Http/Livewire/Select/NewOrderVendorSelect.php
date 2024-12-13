@@ -14,7 +14,6 @@ class NewOrderVendorSelect extends BaseLivewireSelect
             ->when(\Auth::user()->hasRole('manager'), function ($query) {
                 return $query->where('id', \Auth::user()->vendor_id);
             })
-            ->active()
             ->limit(10)
             ->get()
             ->map(function ($vendor) {

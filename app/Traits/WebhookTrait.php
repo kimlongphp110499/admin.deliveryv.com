@@ -157,25 +157,13 @@ trait WebhookTrait
     {
         $input = @file_get_contents("php://input");
         $requestData = json_decode($input, true);
-        $requestData = request()->all();
 
         if (empty($requestData)) {
             return response()->json([
                 "message" => "No params",
             ], 400);
         }
-        //prevent wron event listening
-        $transFound = isset($requestData['data']['transaction']['reference']);
-        $transCodeFound = isset($requestData['data']['invoice_code']);
-        if (!$transFound && !$transCodeFound) {
-            logger("Paystack Webhook called", [$requestData]);
-            return response()->json([
-                "message" => "Wrong event",
-            ], 200);
-        }
-
-
-        $txRef = $requestData['data']['transaction']['reference'] ?? $requestData['data']['invoice_code'];
+        $txRef = $requestData['data']['reference'];
         //check which type of transaction
         $walletTransaction = WalletTransaction::where('session_id', $txRef)->first();
         $order = Order::whereHas('payment', function ($q) use ($txRef) {

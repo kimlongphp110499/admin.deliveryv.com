@@ -18,13 +18,6 @@ class ProductController extends Controller
 
     use GoogleMapApiTrait;
 
-    protected $productsPerPage;
-
-    public function __construct(Request $request)
-    {
-        $this->productsPerPage = 15;
-    }
-
     public function index(Request $request)
     {
 
@@ -41,7 +34,7 @@ class ProductController extends Controller
                 // ->orWhere('description', 'like', '%' . $request->keyword . '%')
                 // ->orWhere('barcode', "like", "%" . $request->keyword);
             })->latest()
-                ->paginate($this->productsPerPage);
+                ->paginate($this->perPage);
         }
         return Product::active()
             ->currentlyOpen()
@@ -103,16 +96,26 @@ class ProductController extends Controller
             ->when($request->type == "new", function ($query) {
                 return $query->orderBy('created_at', 'DESC');
             })
-            ->when($request->type == "featured", function ($query) {
-                return $query->where('featured', 1);
-            })
             // NEW ONES END HERE
-            ->when(fetchDataByLocation() && $request->latitude, function ($query) use ($request) {
-                return $query->byDeliveryZone($request->latitude, $request->longitude);
+            ->when($request->latitude, function ($query) use ($request) {
+
+                if (!fetchDataByLocation()) {
+                    return $query;
+                }
+
+                $latitude = $request->latitude;
+                $longitude = $request->longitude;
+                $deliveryZonesIds = $this->getDeliveryZonesByLocation($latitude, $longitude);
+                //where has vendors that has delivery zones
+                return $query->whereHas("vendor", function ($query) use ($deliveryZonesIds) {
+                    $query->whereHas('delivery_zones', function ($query) use ($deliveryZonesIds) {
+                        $query->whereIn('delivery_zone_id', $deliveryZonesIds);
+                    });
+                });
             })
             //order by in_order
             ->orderBy('in_order', 'ASC')
-            ->paginate($this->productsPerPage);
+            ->paginate($this->perPage);
     }
 
     public function show(Request $request, $id)

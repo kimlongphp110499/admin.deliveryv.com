@@ -8,18 +8,20 @@ use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\PaymentMethod;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\CouponUser;
+use App\Models\OptionGroup;
 use App\Models\Option;
 use App\Models\Vendor;
-use App\Traits\GoogleMapApiTrait;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Twilio\TwiML\Voice\Pay;
 
 class NewOrderLivewire extends BaseLivewireComponent
 {
 
-    use GoogleMapApiTrait;
     public $vendor;
     public $products = [];
     public $newOrder;
@@ -131,7 +133,6 @@ class NewOrderLivewire extends BaseLivewireComponent
                 'name' => $this->selectedModel->name,
                 'selected_options' => json_encode([]),
                 'price' => $this->selectedModel->sell_price,
-                'total_price' => $this->selectedModel->sell_price,
                 'qty' => 1,
             ];
             //array push
@@ -161,31 +162,19 @@ class NewOrderLivewire extends BaseLivewireComponent
         $this->selectedModel = Product::find($this->selectedProductId);
         $selectedOptions = Option::whereIn('id', $selectedOptionIds)->get();
         //map and transform
-        $totalOptionsPrice = 0;
-        $mSelectedOptions = [];
-        foreach ($selectedOptions as $item) {
-            $totalOptionsPrice += $item->price;
-            $mSelectedOptions[] = [
+        $selectedOptions = $selectedOptions->map(function ($item, $key) {
+            return [
                 'id' => $item->id,
                 'name' => $item->name,
                 'price' => $item->price,
             ];
-        }
-        // $selectedOptions = $selectedOptions->map(function ($item, $key) use ($totalOptionsPrice) {
-        //     $totalOptionsPrice += $item->price;
-        //     return [
-        //         'id' => $item->id,
-        //         'name' => $item->name,
-        //         'price' => $item->price,
-        //     ];
-        // });
+        });
         //
         $mProduct = [
             'product_id' => $this->selectedModel->id,
             'name' => $this->selectedModel->name,
-            'selected_options' => json_encode($mSelectedOptions),
+            'selected_options' => json_encode($selectedOptions),
             'price' => $this->selectedModel->sell_price,
-            'total_price' => $this->selectedModel->sell_price + $totalOptionsPrice,
             'qty' => 1,
         ];
 
@@ -238,10 +227,7 @@ class NewOrderLivewire extends BaseLivewireComponent
 
             //default delivery address
             $deliveryAddress = DeliveryAddress::distance($this->vendor->latitude, $this->vendor->longitude)->find($this->delivery_address_id);
-            $outOfDeliveryRange = $deliveryAddress->distance > $this->vendor->delivery_range;
-            $inDeliveryZones = $this->locationInZone($this->vendor, $deliveryAddress);
-            //if out of delivry zones and delivery range
-            if ($outOfDeliveryRange && !$inDeliveryZones) {
+            if ($deliveryAddress->distance > $this->vendor->delivery_range) {
                 $distanceBetweenOrder = $deliveryAddress->distance;
                 $msg = __("Delivery address is out of vendor delivery range");
                 $msg .= ".\n ";
@@ -469,29 +455,12 @@ class NewOrderLivewire extends BaseLivewireComponent
             $deliveryFee += $vendor->charge_per_km ? ($vendor->delivery_fee * $deliveryAddress->distance) : $vendor->delivery_fee;
         }
 
-        //fees
-        $vendorFees = $vendor->fees ?? [];
-        $orderFees = [];
-        $totalFeeAmount = 0;
-        foreach ($vendorFees as $vendorFee) {
-            $feeAmount = $vendorFee->value;
-            if ($vendorFee->percentage ?? false) {
-                $feeAmount = ($vendorFee->value / 100) * $order->sub_total;
-            }
-            $orderFees[] = [
-                "name" => $vendorFee->name,
-                "amount" => $feeAmount,
-            ];
-            //
-            $totalFeeAmount += $feeAmount;
-        }
         $order->sub_total = number_format($order->sub_total, 2, '.', '');
         $order->delivery_fee = number_format($deliveryFee, 2, '.', '');
         $order->discount = number_format($order->discount, 2, '.', '');
         $order->tip = number_format($order->tip, 2, '.', '');
         $order->tax = number_format($order->sub_total * ($order->vendor->tax / 100), 2, '.', '');
-        $order->fees = json_encode($orderFees ?? []);
-        $order->total = ($order->sub_total - $order->discount) + $order->tax + $order->tip + $order->delivery_fee + $totalFeeAmount;
+        $order->total = $order->sub_total - $order->discount + $order->tax + $order->tip + $order->delivery_fee;
         return $order;
     }
 }

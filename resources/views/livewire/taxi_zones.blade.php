@@ -1,4 +1,4 @@
-@section('title', __('Taxi Zones'))
+@section('title', __('Taxi Zones') )
 <div>
 
 
@@ -34,8 +34,7 @@
 
 
 @push('scripts')
-    <script
-        src="https://maps.googleapis.com/maps/api/js?key={{ setting('googleMapKey', '') }}&callback=initMap&libraries=drawing&v=weekly"
-        async></script>
-    <script src="{{ asset('js/delivery-zone.js') }}"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key={{ setting('googleMapKey','') }}&callback=initMap&libraries=drawing&v=weekly" async></script>
+<script src="{{ asset('js/delivery-zone.js') }}"></script>
+
 @endpush

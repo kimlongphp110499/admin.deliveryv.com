@@ -18,16 +18,13 @@ class BackUpLivewire extends BaseLivewireComponent
 
     public function render()
     {
-        return view('livewire.backup');
-    }
 
-
-    public function getBackupsProperty()
-    {
         $files = Storage::allFiles(env("APP_NAME"));
         //reverse the array so that the latest backup is shown first
         $files = array_reverse($files);
-        return $files;
+        return view('livewire.backup', [
+            "backups" => $files,
+        ]);
     }
 
     public function newBackUp()
@@ -40,18 +37,6 @@ class BackUpLivewire extends BaseLivewireComponent
         } catch (Exception $error) {
 
             $this->showErrorAlert(__("Database backup failed"));
-        }
-    }
-
-    public function newFullBackUp()
-    {
-
-        try {
-
-            Artisan::call("backup:run");
-            $this->showSuccessAlert(__("Whole System backup successful"));
-        } catch (Exception $error) {
-            $this->showErrorAlert(__("Whole System backup failed"));
         }
     }
 

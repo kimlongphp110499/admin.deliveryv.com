@@ -26,8 +26,6 @@
                 </div>
 
                 <x-checkbox title="{{ __('Auto move to ready') }}" name="auto_assignment" :defer="true" />
-                <x-checkbox title="{{ __('Extra fields required (e.g kg, width)') }}" name="field_required"
-                    :defer="true" />
                 <x-checkbox title="{{ __('Active') }}" name="is_active" :defer="true" />
             </div>
 

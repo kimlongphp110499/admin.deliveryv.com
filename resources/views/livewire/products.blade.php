@@ -180,9 +180,6 @@
                 <hr class="my-4" />
             @endif
             <x-checkbox title="{{ __('Active') }}" name="isActive" />
-            @hasanyrole('city-admin|admin')
-                <x-checkbox title="{{ __('Featured') }}" name="featured" />
-            @endhasanyrole
         </x-modal-lg>
     </div>
 
@@ -358,9 +355,7 @@
             @endif
 
             <x-checkbox title="{{ __('Active') }}" name="isActive" />
-            @hasanyrole('city-admin|admin')
-                <x-checkbox title="{{ __('Featured') }}" name="featured" />
-            @endhasanyrole
+
         </x-modal-lg>
     </div>
 
@@ -373,7 +368,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-2">
                 @foreach ($subCategories as $subCategory)
                     <x-checkbox title="{{ $subCategory->name }}({{ $subCategory->category->name }})"
-                        name="subCategoriesIDs" value="{{ $subCategory->id }}" />
+                        name="subCategoriesIDs" value="{{ $subCategory->id }}" :defer="false" />
                 @endforeach
             </div>
 
@@ -381,19 +376,20 @@
     </div>
 
     {{-- Assign menus --}}
-    {{-- <div x-data="{ open: @entangle('showAssign') }">
+    <div x-data="{ open: @entangle('showAssign') }">
         <x-modal confirmText="{{ __('Add') }}" action="assignMenus">
             <p class="text-xl font-semibold">{{ __('Add to Menus') }}</p>
             <p class="text-sm text-gray-500">
                 {{ __('Note: Menus of selected vendor for product will be listed here') }}</>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 @foreach ($menus as $menu)
-                    <x-checkbox title="{{ $menu->name }}" name="menusIDs" value="{{ $menu->id }}" />
+                    <x-checkbox title="{{ $menu->name }}" name="menusIDs" value="{{ $menu->id }}"
+                        :defer="true" />
                 @endforeach
             </div>
 
         </x-modal>
-    </div> --}}
+    </div>
 
     {{-- details modal --}}
     <div x-data="{ open: @entangle('showDetails') }">

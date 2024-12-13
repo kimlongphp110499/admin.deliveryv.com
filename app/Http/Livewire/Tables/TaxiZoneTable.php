@@ -12,7 +12,6 @@ class TaxiZoneTable extends BaseDataTableComponent
     public $model = TaxiZone::class;
     public string $defaultSortColumn = 'is_active';
     public string $defaultSortDirection = 'desc';
-    public $checkDemo = true;
 
     public function filters(): array
     {
@@ -32,23 +31,22 @@ class TaxiZoneTable extends BaseDataTableComponent
 
     public function query()
     {
-        return $this->model::when($this->getFilter('start_date'), fn($query, $sDate) => $query->whereDate('created_at', ">=", $sDate))
-            ->when($this->getFilter('end_date'), fn($query, $eDate) => $query->whereDate('created_at', "<=", $eDate));
+        return $this->model::when($this->getFilter('start_date'), fn ($query, $sDate) => $query->whereDate('created_at', ">=", $sDate))
+            ->when($this->getFilter('end_date'), fn ($query, $eDate) => $query->whereDate('created_at', "<=", $eDate));
     }
 
     public function columns(): array
     {
         return [
-            $this->indexColumn(),
+            Column::make(__('ID'), "id")->searchable()->sortable(),
             Column::make(__('Name'), 'name')->searchable()->sortable(),
             $this->activeColumn()->sortable(),
             Column::make(__('Created At'), 'formatted_date'),
-            $this->customActionsColumn(
-                $showView = false,
-                $showEdit = true,
-                $showDelete = true,
-                $showToggleActive = true
-            )
+            Column::make(__('Actions'))->format(function ($value, $column, $row) {
+                return view('components.buttons.simple_actions', $data = [
+                    "model" => $row
+                ]);
+            }),
         ];
     }
 }

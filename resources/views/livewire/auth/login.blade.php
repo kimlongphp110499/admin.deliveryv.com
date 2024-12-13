@@ -17,7 +17,7 @@
                                     <h1 class="mb-4 text-xl font-semibold text-gray-700">{{ __('Login') }}</h1>
                                     <livewire:select.language-selector />
                                 </div>
-                                <x-input title="{{ __('Email') }}" type="" placeholder="info@mail.com"
+                                <x-input title="{{ __('Email') }}" type="email" placeholder="info@mail.com"
                                     name="email" />
                                 <x-input title="{{ __('Password') }}" type="password" placeholder="***************"
                                     name="password" />
@@ -36,32 +36,20 @@
 
                             {{-- registration  --}}
                             @if (setting('partnersCanRegister', true))
-                                <div class="justify-center my-5 text-center space-y-2 md:space-y-4">
-                                    <div class="block md:flex items-center justify-center md:space-x-2">
-                                        <p class="flex items-center justify-center space-x-2">
-                                            <x-heroicon-o-briefcase class="w-5 h-5 text-primary-500" />
-                                            <span class="md:my-2 text-sm font-light">
-                                                {{ __('Become a Vendor/Seller') }}
-                                            </span>
-                                        </p>
+                                <div class="justify-center my-5 text-center">
+                                    <p class="flex items-center justify-center space-x-2">
+                                        <x-heroicon-o-briefcase class="w-5 h-5 text-primary-500" />
+                                        <span class="my-2 text-sm font-light">{{ __('Become a Vendor/Seller') }}</span>
                                         <a href="{{ route('register.vendor') }}"
-                                            class="ml-2 font-bold text-primary-500 text-sm md:text-md">
-                                            {{ __('Click here') }}
-                                        </a>
-                                    </div>
-                                    <div class="block md:flex items-center justify-center md:space-x-2">
-                                        <p class="flex items-center justify-center space-x-2">
-                                            <x-heroicon-o-truck class="w-5 h-5 text-primary-500" />
-                                            <span class="md:my-2 text-sm font-light">
-                                                {{ __('Become a Driver/Rider') }}
-                                            </span>
-                                        </p>
+                                            class="ml-2 font-bold text-primary-500 text-md">{{ __('Click here') }}</a>
+                                    </p>
+                                    <p class="flex items-center justify-center space-x-2">
+                                        <x-heroicon-o-truck class="w-5 h-5 text-primary-500" />
+                                        <span class="my-2 text-sm font-light">{{ __('Become a Driver/Rider') }}</span>
                                         <a href="{{ route('register.driver') }}"
-                                            class="ml-2 font-bold text-primary-500 text-sm md:text-md">
-                                            {{ __('Click here') }}
-                                        </a>
+                                            class="ml-2 font-bold text-primary-500 text-md">{{ __('Click here') }}</a>
+                                    </p>
 
-                                    </div>
                                 </div>
                             @endif
 

@@ -108,36 +108,13 @@ class VPSTaxiOrderMatchingJob implements ShouldQueue
                 //if no driver was found, create another delayed job
                 if (empty($driverDocuments)) {
                     // logger("No Driver found. Now rescheduling the order for another time");
-                    //don't reschedule if the settings is not allowed
-                    $delaySchedule = setting('delayResearchTaxiMatching');
-                    $isAlowed = !empty($delaySchedule) && ((int)$delaySchedule) > 0;
-                    if ($isAlowed) {
-                        VPSTaxiOrderMatchingJob::dispatch($order)
-                            ->delay((int) setting('delayResearchTaxiMatching', 30));
-                    }
+                    VPSTaxiOrderMatchingJob::dispatch($order)
+                        ->delay((int) setting('delayResearchTaxiMatching', 30));
                     return;
                 }
 
 
-                //rearrange drivers by the closet to the location
-                $newDriverDocuments = [];
-                foreach ($driverDocuments as $driverData) {
-                    $distance = $this->getDistance(
-                        [
-                            $pickupLocationLat,
-                            $pickupLocationLng
-                        ],
-                        [
-                            $driverData["lat"],
-                            $driverData["long"],
-                        ]
-                    );
-                    $driverData['distance'] = $distance;
-                    $newDriverDocuments[] = $driverData;
-                }
-                $newDriverDocuments = collect($newDriverDocuments);
-                $newDriverDocuments = $newDriverDocuments->sortBy('distance');
-                $driverDocuments = $newDriverDocuments->toArray();
+
                 //
                 foreach ($driverDocuments as $driverData) {
 

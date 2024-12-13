@@ -16,7 +16,6 @@ class BannerController extends Controller
     {
         return BannerResource::collection(
             Banner::inorder()
-                /*
                 ->when(
                     $request->vendor_type_id,
                     function ($query) use ($request) {
@@ -26,27 +25,10 @@ class BannerController extends Controller
                             return $query->active()->where('vendor_type_id', $request->vendor_type_id);
                         });
                     }
-                )
-                */
-                ->when(
-                    $request->vendor_type_id,
-                    function ($query) use ($request) {
-                        return $query->where('vendor_type_id', $request->vendor_type_id);
-                    },
-                    function ($query) {
-                        return $query->whereNull('vendor_type_id')->orWhere('vendor_type_id', '');
-                    }
-                )
-                ->when(
+                )->when(
                     $request->featured,
                     function ($query) {
                         return $query->where('featured', '1');
-                    }
-                )
-                ->when(
-                    $request->latitude,
-                    function ($query) use ($request) {
-                        return $query->byDeliveryZone($request->latitude, $request->longitude);
                     }
                 )
                 ->active()
