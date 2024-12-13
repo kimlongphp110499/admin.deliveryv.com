@@ -1,2 +1,0 @@
-<p class="font-medium"><?php echo e($text ?? ''); ?><?php echo e($slot ?? ''); ?></p>
-<?php /**PATH /home/deliveryv/public_html/admin.deliveryv.com/resources/views/components/details/p.blade.php ENDPATH**/ ?>
