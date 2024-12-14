@@ -255,6 +255,17 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
     Route::get('password/update/{code}/{email}', PasswordResetLivewire::class)->name('password.reset.link');
     Route::get('preview/share/{type}/{mId}', SharePreviewLivewire::class)->name('preview.share');
 
+    Route::get('privacy/policy', function () {
+        return view('layouts.includes.privacy');
+    })->name('privacy');
+
+    Route::get('pages/contact', function () {
+        return view('layouts.includes.contact');
+    })->name('contact');
+
+    Route::get('pages/terms', function () {
+        return view('layouts.includes.terms');
+    })->name('terms');
     // AUth routes
     Route::group(['middleware' => ['auth', 'restrict_roles:client,driver', "user.active.check"]], function () {
 
