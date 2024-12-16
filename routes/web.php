@@ -22,7 +22,6 @@ use App\Http\Livewire\ProductLivewire;
 use App\Http\Livewire\ProductDetailsLivewire;
 use App\Http\Livewire\ProductRequestLivewire;
 use App\Http\Livewire\FavouriteLivewire;
-use App\Http\Livewire\FavouriteVendorLivewire;
 use App\Http\Livewire\ReviewLivewire;
 use App\Http\Livewire\ProductReviewLivewire;
 use App\Http\Livewire\OptionGroupLivewire;
@@ -255,6 +254,8 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
     Route::get('password/update/{code}/{email}', PasswordResetLivewire::class)->name('password.reset.link');
     Route::get('preview/share/{type}/{mId}', SharePreviewLivewire::class)->name('preview.share');
 
+
+    // Pages
     Route::get('privacy/policy', function () {
         return view('layouts.includes.privacy');
     })->name('privacy');
@@ -266,6 +267,10 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
     Route::get('pages/terms', function () {
         return view('layouts.includes.terms');
     })->name('terms');
+    //
+    Route::get('support/chat', InAppSupportPageLivewire::class)->name('support.chat');
+    Route::get('cms/{slug}', [CMSPageController::class, 'index'])->name('cms.page');
+
     // AUth routes
     Route::group(['middleware' => ['auth', 'restrict_roles:client,driver', "user.active.check"]], function () {
 
@@ -356,7 +361,7 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
             Route::get('operations/exports', ExportLivewire::class)->name('exports');
             Route::get('operations/backup', BackUpLivewire::class)->name('backups');
             if (\App::environment('production')) {
-                Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
+            Route::get('logs', '\Rap2hpoutre\LaravelLogViewer\LogViewerController@index')->name('logs');
             } else {
                 Route::get('logs', function () {
                     return abort(404); // Trigger the default 404 error handler
@@ -566,10 +571,6 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
             ->middleware(['permission:view-vendor-documents']);
         Route::get('drivers/documents', DriverDocumentRequestLivewire::class)->name('drivers.documents')
             ->middleware(['permission:view-driver-documents']);
-
-        //favourites
-        // Route::get('vendors/favourites', FavouriteVendorLivewire::class)->name('vendor.favourites')
-        //     ->middleware(['permission:view-favourites']);
     });
 
 
