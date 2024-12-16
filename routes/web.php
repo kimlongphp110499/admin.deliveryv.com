@@ -271,6 +271,10 @@ Route::group(['middleware' => ['web', 'check_ct_account']], function () {
     Route::get('pages/terms', function () {
         return view('layouts.includes.terms');
     })->name('terms');
+
+    Route::get('support/chat', InAppSupportPageLivewire::class)->name('support.chat');
+    Route::get('cms/{slug}', [CMSPageController::class, 'index'])->name('cms.page');
+
     // AUth routes
     Route::group(['middleware' => ['auth', 'restrict_roles:client,driver', "user.active.check"]], function () {
 
