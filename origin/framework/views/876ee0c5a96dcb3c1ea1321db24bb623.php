@@ -1,1 +1,0 @@
-<?php /**PATH /home/deliveryv/public_html/admin.deliveryv.com/resources/views/vendor/livewire-tables/stubs/modals.blade.php ENDPATH**/ ?>

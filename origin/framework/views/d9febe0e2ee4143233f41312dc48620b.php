@@ -1,1 +1,0 @@
-<a href="<?php echo e(route('wallet.transactions')); ?>?filters[search]=<?php echo e($model->ref); ?>" class="hover:underline text-primary-600"> <?php echo e($value ?? $model->ref ?? $model[$column->attribute] ??  ''); ?></a><?php /**PATH /home/deliveryv/public_html/admin.deliveryv.com/resources/views/components/table/wallet_transaction_code.blade.php ENDPATH**/ ?>
