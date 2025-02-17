@@ -50,7 +50,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('logs:clear')->weekly()->days([1, 3, 6])->at('6:00');
 
         $schedule->command('storage:backup')->dailyAt('02:00')->timezone('Asia/Ho_Chi_Minh');
-        $schedule->command('backup:clean')->dailyAt('01:00')->timezone('Asia/Ho_Chi_Minh');
+        $schedule->command('backup:clean')->weekly()->days([1, 6])->at('1:00');
         $schedule->command('backup:run --only-db')->dailyAt('01:30')->timezone('Asia/Ho_Chi_Minh');
         //
         setting([
